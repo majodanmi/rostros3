@@ -98,7 +98,7 @@ b,strong{font-weight:700}
 #btn-comenzar{position:absolute;width:250px;height:88px;background:var(--navy);border-radius:10px;
   display:flex;align-items:center;justify-content:space-between;padding:0 11px 0 26px;transition:transform .2s;
   box-shadow:0 10px 26px rgba(11,29,92,.35);animation:breathe 2.4s ease-in-out infinite 1.2s}
-#btn-comenzar .lbl{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:1px;color:#fff;padding-top:5px;white-space:nowrap}
+#btn-comenzar .lbl{font-family:'Bebas Neue',sans-serif;font-size:40px;overflow:hidden;letter-spacing:1px;color:#fff;padding-top:5px;white-space:nowrap}
 #btn-comenzar .ar{width:66px;height:66px;flex:none;background:#B39367;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:background .2s}
 #btn-comenzar .ar svg{width:30px;height:30px}
 #btn-comenzar:hover .ar{background:#cfae7c}
@@ -397,10 +397,10 @@ const CONFIG = {
     t1: ['Un campus.','Muchos rostros.','Cientos de historias.','Tu reto es descubrirlas.'],
     t2: '¿Te atreves?',
     t3: ['✨ Explora, encuentra las pistas','y pon a prueba cuánto sabes de'],
-    textosTop: 64,
-    logo: { top: 400, width: 400 },
+    textosTop: 92,
+    logo: { top: 450, width: 420 },
     // Foto en media luna (inicio.webp). left/top/width en px del escenario 675×1200.
-    foto: { left: -60, top: 600, width: 800 },
+    foto: { left: 55, top: 736, width: 625 },
     // Hueco circular del PNG, en proporción al ancho/alto de la imagen original (no tocar si no cambias la foto)
     hueco: { cx: 0.7769, cy: 0.2624, r: 0.4085 },
     // Rueda de 4 colores dentro del hueco
@@ -692,7 +692,7 @@ function buildInicio() {
     `<circle cx="${m}" cy="${m}" r="${r}" fill="none" stroke="${col}" stroke-width="${a.grosor}"
       stroke-dasharray="${q} ${C - q}" stroke-dashoffset="${-q * i}" transform="rotate(-90 ${m} ${m})"/>`).join('');
   const b = $('#btn-comenzar');
-  b.style.left = (hx - 125) + 'px'; b.style.top = (hy - 44) + 'px';
+  b.style.left = (Math.min(hx, 675 - 145) - 125) + 'px'; b.style.top = (hy - 44) + 'px';
 }
 $('#btn-comenzar').addEventListener('click', () => { Snd.click(); goHub(); });
 
@@ -811,8 +811,8 @@ function answerQ(btn) {
   }
   fb.querySelector('.d').textContent = d.dato;
   fb.classList.add('show');
-  $('#qdots i')[qi]; $$('#qdots i')[qi].className = qRes[qi];
-  $('#qnext').querySelector('span.ic').previousSibling.textContent = qi < CONFIG.quiz.length - 1 ? 'Siguiente' : 'Terminar';
+  $$('#qdots i')[qi].className = qRes[qi];
+  $('#qnext').firstChild.textContent = qi < CONFIG.quiz.length - 1 ? 'Siguiente' : 'Terminar';
   $('#qnext').classList.remove('hidden');
 }
 $('#qnext').addEventListener('click', () => {
