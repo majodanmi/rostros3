@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<!--
+  ROSTROS 3 – Unisabana · Juego VERTICAL 9:16 (675×1200) para incrustar en Genially
+  ─────────────────────────────────────────────────────────────────────────────
+  Estructura esperada del repositorio:
+    index.html
+    img/
+      inicio.jpg          ← portada horizontal: se usa recortada dentro del círculo (ver CONFIG.inicio.fotoPos)
+      logoRostros3.svg    ← logo completo (estrella + 3ª TEMPORADA ROSTROS Unisabana)
+      memoria-1.jpg … memoria-6.jpg  ← fotos del juego de memoria
+
+  Cómo incrustarlo en Genially:
+    Insertar → Otros → HTML/iframe y pegar:
+    <iframe src="https://USUARIO.github.io/REPO/" width="675" height="1200"
+      style="border:0;width:100%;height:100%" allow="autoplay" allowfullscreen></iframe>
+
+  Todos los textos, preguntas, respuestas e imágenes se editan en el objeto CONFIG.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rostros 3 · Unisabana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,600;0,700;1,700&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1D5C; --blue:#13288F; --btn:#16297F; --panel:#1B1B21; --panel2:#2D2D33;
+  --opt:#2E2E35; --optb:#8A8A93; --gold:#DDB262; --beige:#E3C4A0; --wine:#8E0F1F;
+  --ok:#3FBF7F; --bad:#E0485A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--navy)}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#stage{width:675px;height:1200px;flex:none;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#0E2266,#091849);transform-origin:center center;
+  font-family:'Montserrat',sans-serif;color:#fff;user-select:none;-webkit-user-select:none}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+b,strong{font-weight:700}
+
+/* ---------- Pantallas ---------- */
+.screen{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s linear .4s}
+.screen.active{opacity:1;visibility:visible;transition:opacity .4s ease}
+.panel{position:absolute;left:30px;top:60px;width:615px;height:1080px;background:var(--panel);border-radius:10px}
+
+/* ---------- Elementos recurrentes ---------- */
+.seal{position:absolute;width:150px;height:150px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.seal>svg.burst{position:absolute;inset:0;width:100%;height:100%}
+.seal>svg.star{position:relative;width:46%;height:46%}
+.bigstar{position:absolute;opacity:.35;pointer-events:none}
+.btn-next{position:absolute;right:30px;bottom:28px;width:92px;height:48px;background:var(--btn);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;transition:transform .2s,filter .2s;z-index:5}
+.btn-next>span{width:40px;height:40px;background:#1d35b0;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.btn-next svg{width:22px;height:22px}
+.btn-next:hover{transform:translateY(-2px);filter:brightness(1.12)}
+#audio{position:absolute;right:14px;bottom:10px;width:34px;height:34px;border-radius:50%;background:var(--panel);
+  display:flex;align-items:center;justify-content:center;z-index:50;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#audio svg{width:20px;height:20px}
+#audio .slash{display:none}
+#audio.muted .slash{display:block}
+#audio.muted .waves{display:none}
+
+/* ---------- Loader ---------- */
+#loader{position:absolute;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
+#loader svg{width:90px;height:90px;animation:spin 2s linear infinite}
+#loader.hide{opacity:0;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- Fallback de imágenes ---------- */
+.img-fallback{background:#3A3A42;color:#bbb;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;word-break:break-all}
+
+/* ---------- 5.1 Inicio ---------- */
+#s-inicio{background:#FBFBFB}
+#ifoto{position:absolute;border-radius:50%;overflow:hidden;background:#ddd}
+#ifoto img,#ifoto .img-fallback{width:100%;height:100%;object-fit:cover}
+#s-inicio .txt{position:absolute;left:55px;color:#111;font-weight:700}
+#s-inicio .t1{font-size:26px;line-height:1.2}
+#s-inicio .t2{font-size:42px;margin-top:14px}
+#s-inicio .t3{font-size:23px;line-height:1.25;margin-top:12px}
+#s-inicio .logo{position:absolute;left:55px;width:300px}
+.fu{opacity:0}
+.screen.active .fu{animation:fu .7s ease both;animation-delay:var(--d,0s)}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#aro{position:absolute;pointer-events:none;animation:spin 10s linear infinite}
+#btn-comenzar{position:absolute;left:217px;top:1088px;width:240px;height:86px;background:var(--navy);border-radius:8px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 26px;transition:transform .2s}
+#btn-comenzar .lbl{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;color:#fff;padding-top:4px;white-space:nowrap}
+#btn-comenzar .ar{width:66px;height:66px;flex:none;background:#B39367;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+#btn-comenzar .ar svg{width:30px;height:30px}
+#btn-comenzar:hover{transform:translateY(-2px)}
+#btn-comenzar:hover .ar{background:#cfae7c}
+
+/* ---------- 5.2 Bienvenida ---------- */
+.poster{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1.02;letter-spacing:.5px}
+#s-bienvenida .poster.h{position:absolute;left:35px;top:40px;font-size:42px;white-space:nowrap}
+#dicebox{position:absolute;left:117px;top:180px;width:380px;height:360px;background:var(--panel2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;perspective:700px}
+#dice{width:280px;height:280px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:'Unbounded',sans-serif;font-weight:800;font-size:210px;color:var(--panel);position:relative;
+  box-shadow:0 8px 24px rgba(0,0,0,.45);animation:pulse 1.8s ease-in-out infinite;transform-style:preserve-3d}
+#dice::after{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:rgba(27,27,33,.25)}
+#dice.flip{animation:flip .15s ease-in-out}
+#dice:hover{filter:brightness(.96)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+#s-bienvenida .right{position:absolute;left:40px;top:590px;width:535px;font-size:19px;line-height:1.5}
+#s-bienvenida .right .poster{margin:30px 0 12px;font-size:46px}
+#s-bienvenida .right .inst{font-weight:700;font-style:italic;font-size:24px;line-height:1.3;max-width:440px}
+
+/* ---------- 5.3 Presentaciones ---------- */
+.tbox{position:absolute;left:15px;top:15px;width:585px;height:500px;background:var(--panel2);border-radius:10px}
+.tbox h1{position:absolute;left:36px;bottom:30px;white-space:nowrap;font-family:'Unbounded',sans-serif;font-weight:800;line-height:.95;letter-spacing:-.02em}
+.l1{color:#fff;display:block}.l2{color:var(--beige);display:block}.lg{color:var(--gold);display:block}
+.desc{position:absolute;left:40px;top:560px;width:535px;font-size:19px;line-height:1.5}
+.desc p+p{margin-top:16px}
+.desc p+p{margin-top:12px}
+
+/* ---------- 5.4 Quiz ---------- */
+#timer{position:absolute;right:30px;top:28px;width:220px;height:70px;background:var(--panel2);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-weight:700;font-size:44px}
+#timer.warn{color:var(--bad);animation:beat 1s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+#qtext{position:absolute;left:45px;width:525px;top:230px;text-align:center;font-weight:700;font-size:24px;line-height:1.35}
+#qopts{position:absolute;left:40px;right:40px;top:440px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.opt{position:relative;width:480px;min-height:66px;padding:12px 40px 12px 44px;background:var(--opt);
+  border:1.5px solid var(--optb);border-radius:6px;font-size:19px;line-height:1.3;text-align:center;display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,background .2s,transform .15s}
+.opt:hover:not(:disabled){background:#38383f;transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.opt .mk{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-weight:700;font-size:20px}
+.opt.ok{border-color:var(--ok)} .opt.ok .mk::before{content:'✓';color:var(--ok)}
+.opt.bad{border-color:var(--bad)} .opt.bad .mk::before{content:'✗';color:var(--bad)}
+#qcount{position:absolute;left:0;right:0;bottom:60px;text-align:center;color:var(--beige);font-size:15px;font-weight:600}
+
+/* ---------- 5.5 Memoria ---------- */
+#s-memoria .inner{position:absolute;left:20px;top:20px;width:575px;height:1040px;background:var(--panel2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center}
+#grid{display:grid;grid-template-columns:repeat(3,172px);grid-template-rows:repeat(4,232px);gap:14px}
+.card{perspective:900px;cursor:pointer;border-radius:14px}
+.card .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.card.open .in{transform:rotateY(180deg)}
+.card .face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.card .back{background:#121219;border:1.5px solid #9A9AA3;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+.card:hover .back{border-color:#d0d0d6}
+.card .back svg{width:62px}
+.card .front{transform:rotateY(180deg);background:#000}
+.card .front img,.card .front .img-fallback{width:100%;height:100%;object-fit:cover;filter:sepia(.35) saturate(1.2) contrast(1.05)}
+.card .front::after{content:'';position:absolute;inset:0;background:rgba(142,15,31,.12);border-radius:14px;box-shadow:inset 0 0 0 0 var(--ok);transition:box-shadow .3s}
+.card.matched .front::after{box-shadow:inset 0 0 0 4px var(--ok)}
+.card.matched.settled .front::after{box-shadow:inset 0 0 0 0 var(--ok)}
+
+/* ---------- 5.6 Pistas ---------- */
+#pcard{position:absolute;left:47px;top:40px;width:520px;height:440px;background:var(--blue);
+  clip-path:polygon(11% 0,100% 0,100% 100%,0 100%,0 13%,2% 11.5%,1% 9%,4% 8%,3% 5.5%,6% 4.5%,5% 2%,8.5% 1.5%,9% .3%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 50px;text-align:center}
+#pcard h2{font-family:'Unbounded',sans-serif;font-weight:800;font-size:52px;line-height:1;margin-bottom:26px}
+#pcard p{font-weight:600;font-size:20px;line-height:1.45}
+#pbar{position:absolute;left:247px;top:500px;width:120px;height:4px;background:#4a4a52;border-radius:2px;overflow:hidden}
+#pbar i{display:block;height:100%;background:#d8d8de;transition:width .4s}
+#pright{position:absolute;left:0;top:530px;width:615px;height:550px;background:var(--panel2);border-radius:10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+#pright h3{font-weight:700;font-size:24px;margin-bottom:10px}
+.name{position:relative;width:480px;min-height:66px;padding:10px 40px;background:#3A3A42;border:1.5px solid var(--optb);border-radius:6px;
+  font-size:20px;display:flex;align-items:center;justify-content:center;text-align:center;transition:background .2s,transform .15s,opacity .2s}
+.name:hover:not(:disabled){background:#45454e;transform:translateY(-2px)}
+.name:disabled{cursor:default}
+.name .mk{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-weight:700;font-size:22px}
+.name.bad{background:#26262c;opacity:.7;border-color:var(--bad)} .name.bad .mk::before{content:'✗';color:var(--bad)}
+.name.ok{border-color:var(--ok)} .name.ok .mk::before{content:'✓';color:var(--ok)}
+
+/* ---------- 5.7 Completado ---------- */
+#s-done .panel{background:var(--blue);border:2px solid #0A0A12}
+#dtitle{position:absolute;left:50px;top:300px;white-space:nowrap;font-family:'Unbounded',sans-serif;font-weight:800;font-size:72px;line-height:.95;letter-spacing:-.02em;opacity:0}
+#dtitle.show{animation:dfade .7s ease forwards}
+@keyframes dfade{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+#s-done.final #dtitle{top:130px}
+#dscore{position:absolute;left:54px;top:480px;color:var(--beige);font-size:20px;font-weight:600}
+#dmsg{position:absolute;left:54px;top:320px;width:510px;font-size:19px;line-height:1.5;display:none;opacity:0}
+#s-done.final #dmsg{display:block;animation:dfade .7s ease .35s forwards}
+#dmsg p+p{margin-top:12px}
+#dstar{position:absolute;left:40px;bottom:30px;width:110px;height:110px}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+
+  <div id="loader"><svg viewBox="0 0 100 100" data-star></svg></div>
+
+  <!-- 5.1 INICIO -->
+  <section class="screen" id="s-inicio" aria-label="Inicio">
+    <div id="ifoto"><img data-src="inicio" alt="Casa de la hacienda, Universidad de La Sabana"></div>
+    <svg id="aro" aria-hidden="true"></svg>
+    <div class="txt" id="itxt"></div>
+    <img class="logo" id="ilogo" data-src="logo" alt="3ª Temporada Rostros Unisabana">
+    <button id="btn-comenzar" aria-label="Comenzar"><span class="lbl">COMENZAR</span><span class="ar" data-icon="chev"></span></button>
+  </section>
+
+  <!-- 5.2 BIENVENIDA -->
+  <section class="screen" id="s-bienvenida" aria-label="Bienvenida">
+    <div data-bigstars></div>
+    <div class="panel">
+      <div class="poster h" id="bposter"></div>
+      <div id="dicebox"><button id="dice" aria-label="Lanzar el dado">1</button></div>
+      <div class="right" id="bright"></div>
+      <div class="seal" style="right:-14px;top:-30px" data-seal></div>
+    </div>
+  </section>
+
+  <!-- 5.3 PRESENTACIÓN (una sola pantalla que se rellena por reto) -->
+  <section class="screen" id="s-intro" aria-label="Presentación del reto">
+    <div class="panel">
+      <div class="tbox"><h1 id="ititle"></h1></div>
+      <div class="seal" style="right:-14px;top:-30px" data-seal></div>
+      <div class="desc" id="idesc"></div>
+      <button class="btn-next" id="inext" aria-label="Continuar"><span data-icon="chev"></span></button>
+    </div>
+  </section>
+
+  <!-- 5.4 QUIZ -->
+  <section class="screen" id="s-quiz" aria-label="Reto Exprés Rostros">
+    <div class="panel" id="qpanel">
+      <div id="timer" aria-live="polite">00:15</div>
+      <div id="qtext"></div>
+      <div id="qopts"></div>
+      <div id="qcount"></div>
+      <div class="seal" style="left:-20px;bottom:-24px;width:130px;height:130px" data-seal></div>
+    </div>
+  </section>
+
+  <!-- 5.5 MEMORIA -->
+  <section class="screen" id="s-memoria" aria-label="Rostros que hacen historia">
+    <div class="panel"><div class="inner"><div id="grid"></div></div></div>
+  </section>
+
+  <!-- 5.6 PISTAS -->
+  <section class="screen" id="s-pista" aria-label="¿Quién soy?">
+    <div class="panel" id="ppanel">
+      <div id="pcard"><h2 id="ptitle"></h2><p id="ptext"></p></div>
+      <div id="pbar"><i></i></div>
+      <div id="pright"><h3>¿Quién soy?</h3><div id="pnames" style="display:flex;flex-direction:column;gap:18px"></div></div>
+    </div>
+  </section>
+
+  <!-- 5.7 COMPLETADO -->
+  <section class="screen" id="s-done" aria-label="Reto completado">
+    <div class="panel">
+      <div class="seal" style="right:-14px;top:-30px" data-seal-blue></div>
+      <h1 id="dtitle"></h1>
+      <div id="dscore"></div>
+      <div id="dmsg"></div>
+      <svg id="dstar" viewBox="0 0 100 100" data-star></svg>
+      <button class="btn-next" id="dhome" aria-label="Volver al inicio"><span data-icon="home"></span></button>
+    </div>
+  </section>
+
+  <button id="audio" aria-label="Silenciar o activar sonido">
+    <svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path class="waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path class="slash" d="M16 9l6 6M22 9l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+
+</div></div>
+
+<script>
+/* =====================================================================
+   CONFIG — edita aquí textos, preguntas, respuestas e imágenes
+   ===================================================================== */
+const CONFIG = {
+  img: {
+    inicio: 'img/inicio.jpg',
+    logo:   'img/logoRostros3.svg',
+    memoria: ['img/memoria-1.jpg','img/memoria-2.jpg','img/memoria-3.jpg','img/memoria-4.jpg','img/memoria-5.jpg','img/memoria-6.jpg']
+  },
+
+  inicio: {
+    textosTop: 70,           // posición vertical del bloque de textos
+    mostrarLogoSVG: true,    // logoRostros3.svg debajo de los textos
+    logoTop: 360,
+    // Foto circular: usa inicio.jpg recortada. fotoPos mueve el encuadre (x% y%) para centrar la casa.
+    // Si prefieres otra foto, cambia CONFIG.img.inicio por otra imagen (p. ej. 'img/casa.jpg').
+    foto: { cx: 337, cy: 818, r: 205, fotoPos: '86% 50%' },
+    // Rueda de 4 colores que gira alrededor de la foto
+    aro: { mostrar: true, grosor: 46, separacion: 4, segundosPorVuelta: 10,
+           colores: ['#13288F', '#8E0F1F', '#DDB262', '#E3C4A0'] },
+    t1: ['Un campus.','Muchos rostros.','Cientos de historias.','Tu reto es descubrirlas.'],
+    t2: '¿Te atreves?',
+    t3: ['✨ Explora, encuentra las pistas','y pon a prueba cuánto sabes de']
+  },
+
+  bienvenida: {
+    poster: ['CADA LUGAR GUARDA UNA HISTORIA.','CADA ROSTRO, UNA MEMORIA.'],
+    texto: 'Bienvenido a <b>Rostros 3</b>. Recorre nuestra historia, descubre sus pistas y conecta los momentos que han construido la Universidad de La Sabana.',
+    pregunta: '¿COMENZAMOS?',
+    instruccion: 'Haz clic en el dado y deja que el azar decida tu primer desafío.'
+  },
+
+  // Presentaciones de cada reto. size = tamaño del título en px
+  intros: {
+    1: { size: 80, title: '<span class="l1">Reto</span><span class="l2">Exprés<br>Rostros</span>',
+         desc: ['Primer reto | Pon a prueba tu memoria',
+                '<b>Cinco preguntas te llevarán por distintos momentos de la historia de la Universidad de La Sabana.</b>',
+                'Observa, recuerda y elige la respuesta correcta. <b>Cada acierto te acercará a descubrir las huellas que hacen parte de nuestra historia.</b>'] },
+    2: { size: 58, title: '<span class="l1">Segundo<br>reto</span><span class="l2">Rostros que<br>hacen<br>historia</span>',
+         desc: ['Haz clic en las tarjetas y encuentra las imágenes que cuentan una misma historia.',
+                '<b>Reconoce los rostros, los espacios y los momentos que hacen parte de la evolución de la Universidad de La Sabana.</b>',
+                'Cada pareja encontrada es una huella de nuestra <b>memoria institucional</b>.'] },
+    3: { size: 70, title: '<span class="lg">Descúbreme</span>',
+         desc: ['<b>Dos rectores. Dos momentos. Una misma historia.</b>',
+                'Recibirás una <b>secuencia de pistas</b> que te llevará a descubrir quiénes son los protagonistas de este reto. Cada tarjeta revelará una nueva huella de su trayectoria y de su vínculo con la Universidad de La Sabana.',
+                '<b>Observa, conecta las pistas y descubre de quiénes se trata antes de llegar a la última tarjeta.</b>'] },
+    4: { size: 70, title: '<span class="l1">Encuentra</span><span class="l2">la salida</span>',
+         desc: ['<b>Cuarto reto | Sigue las huellas</b>',
+                'Tres pistas. Tres momentos. Una trayectoria.',
+                '<b>Conecta las respuestas y descubre al rector que representa un nuevo capítulo en la historia de La Sabana.</b>'] }
+  },
+
+  // Reto 1. "c" = índice (0,1,2) de la respuesta correcta
+  segundos: 15,
+  quiz: [
+    { q: '¿Dónde comenzó esta historia?', o: ['En el barrio universitario','En Chía','En una sede internacional'], c: 0 },
+    { q: 'La Universidad necesitaba crecer. ¿Qué decisión marcó un antes y un después?', o: ['Ampliar las instalaciones del barrio universitario','Comprar un nuevo terreno y trasladar el campus','Cambiar su modelo académico'], c: 1 },
+    { q: '¿Qué idea ha permanecido en el centro de los planes maestros de la Universidad?', o: ['Mantener la escala humana en sus edificaciones con un ecosistema humano','Construir edificios cada vez más grandes','Crecer sin modificar el campus'], c: 0 },
+    { q: '¿Cómo imagina la Universidad su humanismo hacia el futuro?', o: ['Un humanismo tradicional','Un humanismo exclusivamente tecnológico','Un humanismo aumentado'], c: 2 },
+    { q: '¿Qué no puede perder la Universidad mientras se transforma?', o: ['Sus tradiciones arquitectónicas','Su esencia y la centralidad de la persona','Su tamaño'], c: 1 }
+  ],
+
+  // Retos 3 y 4: puedes añadir más pistas a cada array
+  pistas: {
+    3: [ { titulo: 'Pista 1',
+           texto: 'Nací en Colombia en una época en la que el país vivía profundas transformaciones. Desde muy joven entendí que la educación podía ser una herramienta para transformar personas y construir sociedad. <b>¿Quién soy?</b>',
+           o: ['Rolando Roncancio','Octavio Arizmendi','Obdulio Velázquez'], c: 1 } ],
+    4: [ { titulo: 'Pista 2',
+           texto: 'Para mí, el futuro de la Universidad no depende solamente de sus edificios, de la tecnología o de la innovación. Hay algo que permanece en el centro: <b>la persona</b>. <b>¿Quién soy?</b>',
+           o: ['Álvaro Mendoza Ramírez','Rafael González Gigigas','Rolando Andrés Roncancio Rachid'], c: 2 } ]
+  },
+
+  final: ['<b>¡¡Felicidades!</b>',
+          '<b>Has recorrido las huellas de la historia de la Universidad de La Sabana.</b>',
+          'A través de sus <b>rostros, espacios y momentos</b>, descubriste parte del camino que nos ha traído hasta hoy.',
+          '<b>La historia continúa. ¿Te animas a seguir descubriéndola?</b>']
+};
+
+/* =====================================================================
+   Utilidades
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+// Escalado del escenario 675×1200 al tamaño del iframe
+function fit() {
+  const s = Math.min(window.innerWidth / 675, window.innerHeight / 1200);
+  $('#stage').style.transform = `scale(${s})`;
+}
+window.addEventListener('resize', fit); fit();
+
+/* ---------- SVG: estrella Rostros, sello y estrellas de fondo ---------- */
+const STAR_SVG = `
+  <path d="M50 1 Q42 42 1 50 L44 50 L50 44 Z" fill="#DDB262"/>
+  <path d="M50 1 Q58 42 99 50 L56 50 L50 44 Z" fill="#8E0F1F"/>
+  <path d="M99 50 Q58 58 50 99 L50 56 L56 50 Z" fill="#13288F"/>
+  <path d="M1 50 Q42 58 50 99 L50 56 L44 50 Z" fill="#E3C4A0"/>`;
+function burst(points, rO, rI, color) {
+  let d = '';
+  for (let i = 0; i < points * 2; i++) {
+    const r = i % 2 ? rI : rO, a = Math.PI * i / points - Math.PI / 2;
+    d += (i ? 'L' : 'M') + (50 + r * Math.cos(a)).toFixed(2) + ' ' + (50 + r * Math.sin(a)).toFixed(2);
+  }
+  return `<svg class="burst" viewBox="0 0 100 100"><path d="${d}Z" fill="${color}"/></svg>`;
+}
+const ICONS = {
+  chev: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  home: '<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3z" fill="#fff"/></svg>'
+};
+const EYE = '<svg viewBox="0 0 64 40"><path d="M2 20C14 2 50 2 62 20 50 38 14 38 2 20Z" fill="#fff"/><circle cx="32" cy="20" r="11" fill="#121219"/><circle cx="35.5" cy="16.5" r="3.2" fill="#fff"/></svg>';
+
+$$('[data-star]').forEach(e => e.innerHTML = STAR_SVG);
+$$('[data-seal]').forEach(e => e.innerHTML = burst(14, 49, 40, '#141418') + `<svg class="star" viewBox="0 0 100 100">${STAR_SVG}</svg>`);
+$$('[data-seal-blue]').forEach(e => e.innerHTML = burst(14, 49, 40, '#0F2170'));
+$$('[data-icon]').forEach(e => e.innerHTML = ICONS[e.dataset.icon]);
+$$('[data-bigstars]').forEach(e => {
+  const big = (x, y, s, rot) => `<div class="bigstar" style="left:${x}px;top:${y}px;width:${s}px;height:${s}px;transform:rotate(${rot}deg)">${burst(8, 50, 30, '#13288F')}</div>`;
+  e.innerHTML = big(-300, -230, 620, 10) + big(300, 760, 640, -8);
+});
+
+/* ---------- Imágenes con fallback ---------- */
+function fallback(el, src) {
+  const d = document.createElement('div');
+  d.className = 'img-fallback ' + (el.className || '');
+  d.style.cssText = el.style.cssText;
+  if (el.classList.contains('bg')) d.style.cssText += ';position:absolute;inset:0;';
+  d.textContent = src;
+  el.replaceWith(d);
+}
+function setImg(el, src) {
+  el.onerror = () => fallback(el, src);
+  el.src = src;
+}
+function preload(list) {
+  return Promise.race([
+    Promise.all(list.map(src => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = src; }))),
+    wait(8000)
+  ]);
+}
+
+/* =====================================================================
+   Sonido (Web Audio, sin archivos)
+   ===================================================================== */
+const Snd = {
+  on: true, ctx: null,
+  init() {
+    if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+  },
+  tone(f, d, type = 'sine', v = .15, delay = 0) {
+    if (!this.on || !this.ctx) return;
+    const t = this.ctx.currentTime + delay, o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0008, t + d);
+    o.connect(g).connect(this.ctx.destination); o.start(t); o.stop(t + d + .03);
+  },
+  click() { this.tone(660, .06, 'triangle', .08); },
+  ok()    { this.tone(523, .12, 'sine', .16); this.tone(784, .2, 'sine', .16, .1); },
+  bad()   { this.tone(170, .28, 'square', .05); },
+  win()   { [523, 659, 784, 1047].forEach((f, i) => this.tone(f, .22, 'triangle', .12, i * .11)); },
+  tick()  { this.tone(1250, .03, 'square', .025); }
+};
+document.addEventListener('pointerdown', () => Snd.init());
+$('#audio').addEventListener('click', e => {
+  e.stopPropagation(); Snd.on = !Snd.on; $('#audio').classList.toggle('muted', !Snd.on); Snd.click();
+});
+
+/* =====================================================================
+   Estado y navegación
+   ===================================================================== */
+const state = { done: new Set(), current: null };
+let timers = [];               // timeouts/intervals activos de la pantalla actual
+function clearTimers() { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = []; }
+function later(fn, ms) { const t = setTimeout(fn, ms); timers.push(t); return t; }
+
+function showScreen(id) {
+  clearTimers();
+  $$('.screen').forEach(s => s.classList.toggle('active', s.id === 's-' + id));
+}
+// Fundido corto dentro de la misma pantalla (para pasar de pregunta/pista)
+function fadeSwap(el, fn) {
+  el.style.transition = 'opacity .25s'; el.style.opacity = 0;
+  later(() => { fn(); el.style.opacity = 1; }, 260);
+}
+
+/* ---------- 5.1 Inicio ---------- */
+function buildInicio() {
+  const c = CONFIG.inicio, t = $('#itxt');
+  t.style.top = c.textosTop + 'px';
+  t.innerHTML =
+    `<div class="t1 fu" style="--d:.1s">${c.t1.join('<br>')}</div>` +
+    `<div class="t2 fu" style="--d:.2s">${c.t2}</div>` +
+    `<div class="t3 fu" style="--d:.3s">${c.t3.join('<br>')}</div>`;
+  const l = $('#ilogo');
+  if (c.mostrarLogoSVG) { l.style.top = c.logoTop + 'px'; l.classList.add('fu'); l.style.setProperty('--d', '.4s'); }
+  else l.style.display = 'none';
+  const f = c.foto, fo = $('#ifoto');
+  fo.style.cssText = `left:${f.cx - f.r}px;top:${f.cy - f.r}px;width:${f.r * 2}px;height:${f.r * 2}px`;
+  fo.querySelector('img').style.objectPosition = f.fotoPos;
+  const a = c.aro, aro = $('#aro');
+  if (!a.mostrar) { aro.style.display = 'none'; return; }
+  const r = f.r + a.separacion + a.grosor / 2, m = r + a.grosor / 2 + 2, size = m * 2, C = 2 * Math.PI * r, q = C / 4;
+  aro.setAttribute('viewBox', `0 0 ${size} ${size}`);
+  aro.style.cssText = `left:${f.cx - m}px;top:${f.cy - m}px;width:${size}px;height:${size}px;animation-duration:${a.segundosPorVuelta}s`;
+  // 4 cuartos de anillo, uno por color
+  aro.innerHTML = a.colores.map((col, i) =>
+    `<circle cx="${m}" cy="${m}" r="${r}" fill="none" stroke="${col}" stroke-width="${a.grosor}"
+       stroke-dasharray="${q} ${C - q}" stroke-dashoffset="${-q * i}" transform="rotate(-90 ${m} ${m})"/>`).join('');
+}
+$('#btn-comenzar').addEventListener('click', () => { Snd.click(); goBienvenida(); });
+
+/* ---------- 5.2 Bienvenida + dado ---------- */
+function buildBienvenida() {
+  const c = CONFIG.bienvenida;
+  $('#bposter').innerHTML = c.poster.join('<br>');
+  $('#bright').innerHTML = `<p>${c.texto}</p><div class="poster">${c.pregunta}</div><p class="inst">${c.instruccion}</p>`;
+}
+let rolling = false;
+function goBienvenida() { rolling = false; $('#dice').textContent = '1'; showScreen('bienvenida'); fitTitle($('#bposter'), 42, 470); }
+$('#dice').addEventListener('click', () => {
+  if (rolling) return; rolling = true; Snd.click();
+  const pend = [1, 2, 3, 4].filter(n => !state.done.has(n));
+  const pool = pend.length ? pend : [1, 2, 3, 4];
+  const target = pool[Math.floor(Math.random() * pool.length)];
+  const dice = $('#dice'), steps = 8; let i = 0, last = +dice.textContent;
+  const iv = setInterval(() => {
+    dice.classList.remove('flip'); void dice.offsetWidth; dice.classList.add('flip');
+    let n; if (i < steps) { do { n = 1 + Math.floor(Math.random() * 4); } while (n === last); } else n = target;
+    last = n; setTimeout(() => dice.textContent = n, 75); Snd.tick();
+    if (++i > steps) { clearInterval(iv); later(() => goIntro(target), 750); }
+  }, 150);
+  timers.push(iv);
+});
+
+/* Ajusta el tamaño de un título para que no se salga de su caja */
+function fitTitle(el, base, maxW) {
+  let size = base; el.style.fontSize = size + 'px';
+  while (el.offsetWidth > maxW && size > 24) { size -= 2; el.style.fontSize = size + 'px'; }
+}
+let lastIntro = null;
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
+  if (lastIntro) fitTitle($('#ititle'), CONFIG.intros[lastIntro].size, 520);
+  fitTitle($('#bposter'), 42, 470);
+});
+
+/* ---------- 5.3 Presentaciones ---------- */
+function goIntro(n) {
+  state.current = n;
+  const c = CONFIG.intros[n];
+  $('#ititle').innerHTML = c.title; lastIntro = n;
+  $('#idesc').innerHTML = c.desc.map(p => `<p>${p}</p>`).join('');
+  showScreen('intro');
+  fitTitle($('#ititle'), c.size, 520);
+}
+$('#inext').addEventListener('click', () => {
+  Snd.click();
+  const n = state.current;
+  if (n === 1) startQuiz(); else if (n === 2) startMemoria(); else startPistas(n);
+});
+
+/* ---------- 5.4 Quiz ---------- */
+let qi = 0, score = 0, left = 0, qLocked = false;
+function startQuiz() { qi = 0; score = 0; showScreen('quiz'); renderQ(); }
+function renderQ() {
+  const d = CONFIG.quiz[qi]; qLocked = false;
+  $('#qtext').textContent = d.q;
+  $('#qcount').textContent = `Pregunta ${qi + 1} de ${CONFIG.quiz.length}`;
+  const box = $('#qopts'); box.innerHTML = '';
+  shuffle(d.o.map((t, i) => ({ t, i }))).forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.dataset.ok = o.i === d.c ? '1' : '';
+    b.innerHTML = `<span class="mk"></span><span>${o.t}</span>`;
+    b.addEventListener('click', () => answerQ(b));
+    box.appendChild(b);
+  });
+  startTimer();
+}
+function setTimer() {
+  const t = $('#timer'); t.textContent = '00:' + String(Math.max(left, 0)).padStart(2, '0');
+  t.classList.toggle('warn', left <= 5);
+}
+function startTimer() {
+  left = CONFIG.segundos; setTimer();
+  const iv = setInterval(() => {
+    left--; setTimer();
+    if (left > 0 && left <= 5) Snd.tick();
+    if (left <= 0) { clearInterval(iv); answerQ(null); }
+  }, 1000);
+  timers.push(iv); qTimer = iv;
+}
+let qTimer = null;
+function answerQ(btn) {
+  if (qLocked) return; qLocked = true; clearInterval(qTimer);
+  $('#timer').classList.remove('warn');
+  $$('#qopts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('ok'); });
+  if (btn) {
+    if (btn.dataset.ok) { score++; Snd.ok(); } else { btn.classList.add('bad'); Snd.bad(); }
+  }
+  later(() => {
+    qi++;
+    if (qi < CONFIG.quiz.length) fadeSwap($('#qpanel'), renderQ);
+    else goDone(1);
+  }, 1500);
+}
+
+/* ---------- 5.5 Memoria ---------- */
+let mFirst = null, mLock = false, mFound = 0;
+function startMemoria() {
+  mFirst = null; mLock = false; mFound = 0;
+  const grid = $('#grid'); grid.innerHTML = '';
+  shuffle([...CONFIG.img.memoria, ...CONFIG.img.memoria]).forEach((src, k) => {
+    const c = document.createElement('div');
+    c.className = 'card'; c.dataset.src = src; c.tabIndex = 0;
+    c.setAttribute('role', 'button'); c.setAttribute('aria-label', 'Carta ' + (k + 1));
+    c.innerHTML = `<div class="in"><div class="face back">${EYE}</div><div class="face front"><img alt="Foto histórica de la Universidad de La Sabana"></div></div>`;
+    setImg(c.querySelector('img'), src);
+    c.addEventListener('click', () => flipCard(c));
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipCard(c); } });
+    grid.appendChild(c);
+  });
+  showScreen('memoria');
+}
+function flipCard(c) {
+  if (mLock || c.classList.contains('open')) return;
+  Snd.click(); c.classList.add('open');
+  if (!mFirst) { mFirst = c; return; }
+  const a = mFirst; mFirst = null; mLock = true;
+  if (a.dataset.src === c.dataset.src) {
+    later(() => {
+      [a, c].forEach(x => x.classList.add('matched')); Snd.ok(); mFound++;
+      later(() => [a, c].forEach(x => x.classList.add('settled')), 700);
+      if (mFound === CONFIG.img.memoria.length) later(() => goDone(2), 800);
+      else mLock = false;
+    }, 450);
+  } else {
+    later(() => { [a, c].forEach(x => x.classList.remove('open')); mLock = false; }, 900 + 450);
+  }
+}
+
+/* ---------- 5.6 Pistas ---------- */
+let pReto = 3, pIdx = 0;
+function startPistas(n) { pReto = n; pIdx = 0; showScreen('pista'); renderPista(); }
+function renderPista() {
+  const list = CONFIG.pistas[pReto], d = list[pIdx];
+  $('#ptitle').textContent = d.titulo;
+  $('#ptext').innerHTML = d.texto;
+  $('#pbar i').style.width = ((pIdx + 1) / list.length * 100) + '%';
+  const box = $('#pnames'); box.innerHTML = '';
+  shuffle(d.o.map((t, i) => ({ t, i }))).forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'name'; b.innerHTML = `<span class="mk"></span><span>${o.t}</span>`;
+    b.addEventListener('click', () => {
+      if (o.i === d.c) {
+        b.classList.add('ok'); Snd.ok();
+        $$('#pnames .name').forEach(x => x.disabled = true);
+        later(() => {
+          pIdx++;
+          if (pIdx < list.length) fadeSwap($('#ppanel'), renderPista); else goDone(pReto);
+        }, 1200);
+      } else { b.classList.add('bad'); b.disabled = true; Snd.bad(); }
+    });
+    box.appendChild(b);
+  });
+}
+
+/* ---------- 5.7 Completado ---------- */
+function goDone(n) {
+  state.done.add(n);
+  const s = $('#s-done'), t = $('#dtitle');
+  s.classList.toggle('final', n === 4);
+  t.innerHTML = `<span class="l1">Reto ${n}</span><span class="l2">Completado</span>`;
+  $('#dscore').textContent = n === 1 ? `Aciertos: ${score} de ${CONFIG.quiz.length}` : '';
+  $('#dmsg').innerHTML = CONFIG.final.map(p => `<p>${p}</p>`).join('');
+  t.classList.remove('show'); void t.offsetWidth;
+  showScreen('done');
+  fitTitle(t, n === 4 ? 66 : 72, 530);
+  later(() => { t.classList.add('show'); Snd.win(); }, 200);
+}
+$('#dhome').addEventListener('click', () => { Snd.click(); showScreen('inicio'); });
+
+/* =====================================================================
+   Arranque
+   ===================================================================== */
+buildInicio(); buildBienvenida();
+$$('img[data-src]').forEach(el => setImg(el, CONFIG.img[el.dataset.src]));
+preload([CONFIG.img.inicio, CONFIG.img.logo, ...CONFIG.img.memoria]).then(() => {
+  $('#loader').classList.add('hide');
+  showScreen('inicio');
+});
+</script>
+</body>
+</html>
