@@ -2,19 +2,19 @@
 <!--
   ROSTROS 3 – Unisabana · Juego VERTICAL 9:16 (675×1200) para incrustar en Genially
   ─────────────────────────────────────────────────────────────────────────────
-  Estructura esperada del repositorio:
+  Estructura del repositorio:
     index.html
     img/
-      inicio.jpg          ← portada horizontal: se usa recortada dentro del círculo (ver CONFIG.inicio.fotoPos)
-      logoRostros3.svg    ← logo completo (estrella + 3ª TEMPORADA ROSTROS Unisabana)
-      memoria-1.jpg … memoria-6.jpg  ← fotos del juego de memoria
+      inicio.webp         ← foto de la casa recortada en media luna (versión liviana de inicio.png)
+      logoRostros3.svg    ← logo completo
+      memoria-1.jpg … memoria-6.jpg
 
-  Cómo incrustarlo en Genially:
-    Insertar → Otros → HTML/iframe y pegar:
+  Incrustar en Genially (Insertar → Otros → HTML/iframe):
     <iframe src="https://USUARIO.github.io/REPO/" width="675" height="1200"
       style="border:0;width:100%;height:100%" allow="autoplay" allowfullscreen></iframe>
+  Nota: dentro del editor de Genially el iframe puede no responder a clics; pruébalo en Vista previa.
 
-  Todos los textos, preguntas, respuestas e imágenes se editan en el objeto CONFIG.
+  Todos los textos, preguntas, pistas, puntajes e imágenes se editan en CONFIG.
 -->
 <html lang="es">
 <head>
@@ -23,11 +23,11 @@
 <title>Rostros 3 · Unisabana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,600;0,700;1,700&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0B1D5C; --blue:#13288F; --btn:#16297F; --panel:#1B1B21; --panel2:#2D2D33;
-  --opt:#2E2E35; --optb:#8A8A93; --gold:#DDB262; --beige:#E3C4A0; --wine:#8E0F1F;
+  --navy:#0B1D5C; --blue:#13288F; --btn:#16297F; --panel:#1B1B21; --panel2:#2D2D33; --panel3:#3A3A42;
+  --opt:#2E2E35; --optb:#8A8A93; --gold:#DBB166; --beige:#E1C6A9; --wine:#880415; --logoblue:#0C1F71;
   --ok:#3FBF7F; --bad:#E0485A;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -35,152 +35,236 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy)}
 #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #stage{width:675px;height:1200px;flex:none;position:relative;overflow:hidden;
   background:linear-gradient(160deg,#0E2266,#091849);transform-origin:center center;
-  font-family:'Montserrat',sans-serif;color:#fff;user-select:none;-webkit-user-select:none}
+  font-family:'Montserrat',sans-serif;color:#fff;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer}
-button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button:focus-visible,.card:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 b,strong{font-weight:700}
 
 /* ---------- Pantallas ---------- */
 .screen{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s linear .4s}
 .screen.active{opacity:1;visibility:visible;transition:opacity .4s ease}
-.panel{position:absolute;left:30px;top:60px;width:615px;height:1080px;background:var(--panel);border-radius:10px}
+.panel{position:absolute;left:30px;top:60px;width:615px;height:1080px;background:var(--panel);border-radius:12px}
 
-/* ---------- Elementos recurrentes ---------- */
-.seal{position:absolute;width:150px;height:150px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+/* ---------- Comunes ---------- */
+.seal{position:absolute;width:150px;height:150px;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:3}
 .seal>svg.burst{position:absolute;inset:0;width:100%;height:100%}
-.seal>svg.star{position:relative;width:46%;height:46%}
+.seal>svg.star{position:relative;width:50%;height:50%}
 .bigstar{position:absolute;opacity:.35;pointer-events:none}
-.btn-next{position:absolute;right:30px;bottom:28px;width:92px;height:48px;background:var(--btn);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;transition:transform .2s,filter .2s;z-index:5}
-.btn-next>span{width:40px;height:40px;background:#1d35b0;border-radius:5px;display:flex;align-items:center;justify-content:center}
-.btn-next svg{width:22px;height:22px}
-.btn-next:hover{transform:translateY(-2px);filter:brightness(1.12)}
-#audio{position:absolute;right:14px;bottom:10px;width:34px;height:34px;border-radius:50%;background:var(--panel);
-  display:flex;align-items:center;justify-content:center;z-index:50;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-#audio svg{width:20px;height:20px}
+.btn-next{position:absolute;right:28px;bottom:28px;height:60px;min-width:104px;background:var(--btn);border-radius:8px;
+  display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:0 8px 0 20px;transition:transform .2s,filter .2s,opacity .3s;z-index:5;
+  font-weight:700;font-size:19px;letter-spacing:.3px}
+.btn-next>span.ic{width:46px;height:46px;flex:none;background:#2340c4;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.btn-next svg{width:24px;height:24px}
+.btn-next:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.btn-next.hidden{opacity:0;pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:20px;background:var(--panel2);
+  font-weight:700;font-size:17px;letter-spacing:.3px;white-space:nowrap}
+.chip .v{color:var(--gold)}
+.poster{font-family:'Bebas Neue',sans-serif;line-height:1.02;letter-spacing:.5px;white-space:nowrap}
+.kicker{font-weight:700;font-size:16px;letter-spacing:2px;text-transform:uppercase;color:var(--beige)}
+#audio{position:absolute;right:14px;bottom:12px;width:40px;height:40px;border-radius:50%;background:var(--panel);
+  display:flex;align-items:center;justify-content:center;z-index:70;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#audio svg{width:22px;height:22px}
 #audio .slash{display:none}
 #audio.muted .slash{display:block}
 #audio.muted .waves{display:none}
+#s-inicio.active~#audio{background:var(--navy)}
+#confetti{position:absolute;inset:0;width:675px;height:1200px;pointer-events:none;z-index:60}
+.pop{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.float-pts{position:absolute;font-family:'Unbounded',sans-serif;font-weight:800;font-size:30px;color:var(--gold);pointer-events:none;
+  animation:floatup 1.2s ease-out forwards;z-index:20;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+@keyframes floatup{0%{opacity:0;transform:translateY(10px) scale(.8)}15%{opacity:1;transform:translateY(0) scale(1.1)}100%{opacity:0;transform:translateY(-70px) scale(1)}}
 
 /* ---------- Loader ---------- */
 #loader{position:absolute;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:100;transition:opacity .5s}
-#loader svg{width:90px;height:90px;animation:spin 2s linear infinite}
+#loader svg{width:110px;height:110px;animation:spin 2s linear infinite}
 #loader.hide{opacity:0;pointer-events:none}
 @keyframes spin{to{transform:rotate(360deg)}}
+.img-fallback{background:#3A3A42;color:#bbb;font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;word-break:break-all}
 
-/* ---------- Fallback de imágenes ---------- */
-.img-fallback{background:#3A3A42;color:#bbb;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;word-break:break-all}
-
-/* ---------- 5.1 Inicio ---------- */
-#s-inicio{background:#FBFBFB}
-#ifoto{position:absolute;border-radius:50%;overflow:hidden;background:#ddd}
-#ifoto img,#ifoto .img-fallback{width:100%;height:100%;object-fit:cover}
-#s-inicio .txt{position:absolute;left:55px;color:#111;font-weight:700}
-#s-inicio .t1{font-size:26px;line-height:1.2}
-#s-inicio .t2{font-size:42px;margin-top:14px}
-#s-inicio .t3{font-size:23px;line-height:1.25;margin-top:12px}
-#s-inicio .logo{position:absolute;left:55px;width:300px}
+/* ---------- Inicio ---------- */
+#s-inicio{background:#FFFFFF}
+#ifoto{position:absolute;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 20%);mask-image:linear-gradient(to bottom,transparent 0,#000 20%)}
+#s-inicio .txt{position:absolute;left:50px;color:#111;font-weight:700}
+#s-inicio .t1{font-size:29px;line-height:1.22}
+#s-inicio .t2{font-size:48px;margin-top:16px;font-weight:800;letter-spacing:-.5px}
+#s-inicio .t3{font-size:24px;line-height:1.3;margin-top:12px}
+#s-inicio .logo{position:absolute;left:50px}
 .fu{opacity:0}
 .screen.active .fu{animation:fu .7s ease both;animation-delay:var(--d,0s)}
-@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-#aro{position:absolute;pointer-events:none;animation:spin 10s linear infinite}
-#btn-comenzar{position:absolute;left:217px;top:1088px;width:240px;height:86px;background:var(--navy);border-radius:8px;
-  display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 26px;transition:transform .2s}
-#btn-comenzar .lbl{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:1px;color:#fff;padding-top:4px;white-space:nowrap}
-#btn-comenzar .ar{width:66px;height:66px;flex:none;background:#B39367;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+#aro{position:absolute;pointer-events:none;animation:spin 14s linear infinite}
+#btn-comenzar{position:absolute;width:250px;height:88px;background:var(--navy);border-radius:10px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 11px 0 26px;transition:transform .2s;
+  box-shadow:0 10px 26px rgba(11,29,92,.35);animation:breathe 2.4s ease-in-out infinite 1.2s}
+#btn-comenzar .lbl{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:1px;color:#fff;padding-top:5px;white-space:nowrap}
+#btn-comenzar .ar{width:66px;height:66px;flex:none;background:#B39367;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:background .2s}
 #btn-comenzar .ar svg{width:30px;height:30px}
-#btn-comenzar:hover{transform:translateY(-2px)}
 #btn-comenzar:hover .ar{background:#cfae7c}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 
-/* ---------- 5.2 Bienvenida ---------- */
-.poster{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1.02;letter-spacing:.5px}
-#s-bienvenida .poster.h{position:absolute;left:35px;top:40px;font-size:42px;white-space:nowrap}
-#dicebox{position:absolute;left:117px;top:180px;width:380px;height:360px;background:var(--panel2);border-radius:10px;
+/* ---------- Bienvenida / Hub ---------- */
+#s-hub .poster.h{position:absolute;left:36px;top:34px;font-size:44px}
+#dicebox{position:absolute;left:147px;top:150px;width:320px;height:290px;background:var(--panel2);border-radius:12px;
   display:flex;align-items:center;justify-content:center;perspective:700px}
-#dice{width:280px;height:280px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-family:'Unbounded',sans-serif;font-weight:800;font-size:210px;color:var(--panel);position:relative;
+#dice{width:236px;height:236px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Unbounded',sans-serif;font-weight:800;font-size:170px;color:var(--panel);position:relative;
   box-shadow:0 8px 24px rgba(0,0,0,.45);animation:pulse 1.8s ease-in-out infinite;transform-style:preserve-3d}
-#dice::after{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:rgba(27,27,33,.25)}
+#dice::after{content:'';position:absolute;left:0;right:0;top:50%;height:3px;background:rgba(27,27,33,.22)}
 #dice.flip{animation:flip .15s ease-in-out}
 #dice:hover{filter:brightness(.96)}
+#dice.gone{display:none}
+#btn-final{display:none;width:270px;height:200px;border-radius:12px;background:var(--blue);flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:1;animation:pulse 1.8s ease-in-out infinite;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+#btn-final svg{width:70px;height:70px}
+#btn-final.show{display:flex}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
-#s-bienvenida .right{position:absolute;left:40px;top:590px;width:535px;font-size:19px;line-height:1.5}
-#s-bienvenida .right .poster{margin:30px 0 12px;font-size:46px}
-#s-bienvenida .right .inst{font-weight:700;font-style:italic;font-size:24px;line-height:1.3;max-width:440px}
+#htext{position:absolute;left:40px;top:462px;width:535px;font-size:20px;line-height:1.45}
+#htext .poster{font-size:46px;margin:14px 0 4px}
+#htext .inst{font-weight:700;font-style:italic;font-size:23px;line-height:1.3}
+#hprog{position:absolute;left:28px;right:28px;top:706px}
+#hprog .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+#tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{position:relative;height:150px;border-radius:12px;background:var(--panel2);padding:16px 18px;overflow:hidden;border:2px solid transparent;transition:border-color .3s,background .3s}
+.tile .n{font-family:'Unbounded',sans-serif;font-weight:800;font-size:40px;line-height:1;color:#55555f}
+.tile .nm{font-weight:700;font-size:18px;line-height:1.2;margin-top:10px}
+.tile .st{position:absolute;left:18px;bottom:14px;font-size:15px;font-weight:600;color:#9a9aa5}
+.tile.done{background:#1d2a6e;border-color:var(--gold)}
+.tile.done .n{color:var(--gold)}
+.tile.done .st{color:var(--beige)}
+.tile.done::after{content:'✓';position:absolute;right:14px;top:10px;width:36px;height:36px;border-radius:50%;background:var(--gold);color:var(--navy);
+  font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center}
+.tile.next{border-color:#fff;animation:pulse 1s ease-in-out 2}
 
-/* ---------- 5.3 Presentaciones ---------- */
-.tbox{position:absolute;left:15px;top:15px;width:585px;height:500px;background:var(--panel2);border-radius:10px}
-.tbox h1{position:absolute;left:36px;bottom:30px;white-space:nowrap;font-family:'Unbounded',sans-serif;font-weight:800;line-height:.95;letter-spacing:-.02em}
+/* ---------- Presentaciones ---------- */
+.tbox{position:absolute;left:15px;top:15px;width:585px;height:500px;background:var(--panel2);border-radius:12px;overflow:hidden}
+.tbox .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);opacity:.55}
+.tbox::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,40,143,.55) 0%,rgba(45,45,51,.75) 55%,rgba(45,45,51,.97) 100%)}
+.tbox h1{position:absolute;left:36px;bottom:30px;white-space:nowrap;font-family:'Unbounded',sans-serif;font-weight:800;line-height:.95;letter-spacing:-.02em;z-index:2}
+.tbox .kicker{position:absolute;left:38px;top:34px;z-index:2}
 .l1{color:#fff;display:block}.l2{color:var(--beige);display:block}.lg{color:var(--gold);display:block}
-.desc{position:absolute;left:40px;top:560px;width:535px;font-size:19px;line-height:1.5}
+.desc{position:absolute;left:40px;top:545px;width:535px;font-size:21px;line-height:1.45}
 .desc p+p{margin-top:16px}
-.desc p+p{margin-top:12px}
+.rules{position:absolute;left:40px;top:888px;width:400px;font-size:16px;line-height:1.4;color:var(--beige);font-weight:600}
 
-/* ---------- 5.4 Quiz ---------- */
-#timer{position:absolute;right:30px;top:28px;width:220px;height:70px;background:var(--panel2);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-weight:700;font-size:44px}
+/* ---------- Quiz ---------- */
+#qhead{position:absolute;left:30px;top:30px}
+#qdots{display:flex;gap:8px;margin-top:12px}
+#qdots i{width:34px;height:8px;border-radius:4px;background:#45454f;transition:background .3s}
+#qdots i.ok{background:var(--ok)}#qdots i.bad{background:var(--bad)}#qdots i.cur{background:#fff}
+#timer{position:absolute;right:30px;top:28px;width:190px;height:76px;background:var(--panel2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-weight:700;font-size:44px;overflow:hidden}
+#timer::after{content:'';position:absolute;left:0;bottom:0;height:5px;width:var(--p,100%);background:var(--gold);transition:width 1s linear}
 #timer.warn{color:var(--bad);animation:beat 1s ease-in-out infinite}
+#timer.warn::after{background:var(--bad)}
 @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-#qtext{position:absolute;left:45px;width:525px;top:230px;text-align:center;font-weight:700;font-size:24px;line-height:1.35}
-#qopts{position:absolute;left:40px;right:40px;top:440px;display:flex;flex-direction:column;align-items:center;gap:20px}
-.opt{position:relative;width:480px;min-height:66px;padding:12px 40px 12px 44px;background:var(--opt);
-  border:1.5px solid var(--optb);border-radius:6px;font-size:19px;line-height:1.3;text-align:center;display:flex;align-items:center;justify-content:center;
-  transition:border-color .2s,background .2s,transform .15s}
-.opt:hover:not(:disabled){background:#38383f;transform:translateY(-2px)}
+#qscore{position:absolute;right:30px;top:118px}
+#qflow{position:absolute;left:40px;right:40px;top:190px;bottom:120px;display:flex;flex-direction:column;align-items:center}
+#qtext{text-align:center;font-weight:700;font-size:28px;line-height:1.3;min-height:110px;display:flex;align-items:center}
+#qopts{display:flex;flex-direction:column;gap:16px;margin-top:26px;width:100%}
+.opt{position:relative;width:100%;min-height:80px;padding:14px 52px;background:var(--opt);
+  border:2px solid var(--optb);border-radius:10px;font-size:22px;line-height:1.3;text-align:center;display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,background .2s,transform .15s,opacity .3s}
+.opt:hover:not(:disabled){background:#3a3a43;transform:translateY(-2px);border-color:#c9c9d1}
 .opt:disabled{cursor:default}
-.opt .mk{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-weight:700;font-size:20px}
-.opt.ok{border-color:var(--ok)} .opt.ok .mk::before{content:'✓';color:var(--ok)}
-.opt.bad{border-color:var(--bad)} .opt.bad .mk::before{content:'✗';color:var(--bad)}
-#qcount{position:absolute;left:0;right:0;bottom:60px;text-align:center;color:var(--beige);font-size:15px;font-weight:600}
+.opt .mk{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-weight:800;font-size:26px}
+.opt.ok{border-color:var(--ok);background:rgba(63,191,127,.14)} .opt.ok .mk::before{content:'✓';color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:rgba(224,72,90,.12)} .opt.bad .mk::before{content:'✗';color:var(--bad)}
+.opt.dim{opacity:.45}
+#qfb{margin-top:22px;width:100%;background:var(--panel2);border-radius:10px;padding:18px 22px;border-left:6px solid var(--gold);
+  opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s}
+#qfb.show{opacity:1;transform:none}
+#qfb .t{font-weight:800;font-size:22px;margin-bottom:6px}
+#qfb .t.ok{color:var(--ok)}#qfb .t.bad{color:var(--bad)}#qfb .t.to{color:var(--gold)}
+#qfb .d{font-size:18px;line-height:1.45;color:#e8e8ee}
 
-/* ---------- 5.5 Memoria ---------- */
-#s-memoria .inner{position:absolute;left:20px;top:20px;width:575px;height:1040px;background:var(--panel2);border-radius:10px;
-  display:flex;align-items:center;justify-content:center}
-#grid{display:grid;grid-template-columns:repeat(3,172px);grid-template-rows:repeat(4,232px);gap:14px}
+/* ---------- Memoria ---------- */
+#mhud{position:absolute;left:24px;right:24px;top:24px;display:flex;gap:10px;justify-content:space-between}
+#grid{position:absolute;left:37px;top:92px;display:grid;grid-template-columns:repeat(3,172px);grid-template-rows:repeat(4,206px);gap:12px}
 .card{perspective:900px;cursor:pointer;border-radius:14px}
 .card .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
 .card.open .in{transform:rotateY(180deg)}
 .card .face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
-.card .back{background:#121219;border:1.5px solid #9A9AA3;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
-.card:hover .back{border-color:#d0d0d6}
-.card .back svg{width:62px}
+.card .back{background:#121219;border:2px solid #9A9AA3;display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s}
+.card:hover .back{border-color:#e0e0e6;background:#17171f}
+.card .back svg{width:70px}
 .card .front{transform:rotateY(180deg);background:#000}
 .card .front img,.card .front .img-fallback{width:100%;height:100%;object-fit:cover;filter:sepia(.35) saturate(1.2) contrast(1.05)}
-.card .front::after{content:'';position:absolute;inset:0;background:rgba(142,15,31,.12);border-radius:14px;box-shadow:inset 0 0 0 0 var(--ok);transition:box-shadow .3s}
-.card.matched .front::after{box-shadow:inset 0 0 0 4px var(--ok)}
-.card.matched.settled .front::after{box-shadow:inset 0 0 0 0 var(--ok)}
+.card .front::before{content:'';position:absolute;inset:0;background:rgba(136,4,21,.12);z-index:1}
+.card .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 10px 9px;font-size:14px;font-weight:700;line-height:1.2;text-align:center;
+  background:linear-gradient(transparent,rgba(12,31,113,.95));opacity:0;transition:opacity .4s}
+.card.matched .cap{opacity:1}
+.card.matched .front{box-shadow:inset 0 0 0 0 transparent}
+.card.matched .in{animation:matchpop .5s ease .45s}
+.card.miss .in{animation:shake .4s ease}
+@keyframes matchpop{0%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.07)}100%{transform:rotateY(180deg) scale(1)}}
+@keyframes shake{0%,100%{transform:rotateY(180deg) translateX(0)}25%{transform:rotateY(180deg) translateX(6px)}75%{transform:rotateY(180deg) translateX(-6px)}}
+#mtoast{position:absolute;left:24px;right:24px;bottom:22px;height:74px;border-radius:10px;background:var(--blue);display:flex;align-items:center;gap:14px;padding:0 18px;
+  opacity:0;transform:translateY(12px);transition:opacity .35s,transform .35s}
+#mtoast.show{opacity:1;transform:none}
+#mtoast .ck{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;flex:none}
+#mtoast .tx{font-weight:700;font-size:19px;line-height:1.25}
+#mtoast .tx small{display:block;font-weight:600;font-size:14px;color:var(--beige);letter-spacing:1px;text-transform:uppercase}
 
-/* ---------- 5.6 Pistas ---------- */
-#pcard{position:absolute;left:47px;top:40px;width:520px;height:440px;background:var(--blue);
+/* ---------- Pistas ---------- */
+#phead{position:absolute;left:30px;right:30px;top:26px;display:flex;justify-content:space-between;align-items:center}
+#pcard{position:absolute;left:47px;top:92px;width:520px;height:420px;background:var(--blue);
   clip-path:polygon(11% 0,100% 0,100% 100%,0 100%,0 13%,2% 11.5%,1% 9%,4% 8%,3% 5.5%,6% 4.5%,5% 2%,8.5% 1.5%,9% .3%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 50px;text-align:center}
-#pcard h2{font-family:'Unbounded',sans-serif;font-weight:800;font-size:52px;line-height:1;margin-bottom:26px}
-#pcard p{font-weight:600;font-size:20px;line-height:1.45}
-#pbar{position:absolute;left:247px;top:500px;width:120px;height:4px;background:#4a4a52;border-radius:2px;overflow:hidden}
-#pbar i{display:block;height:100%;background:#d8d8de;transition:width .4s}
-#pright{position:absolute;left:0;top:530px;width:615px;height:550px;background:var(--panel2);border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
-#pright h3{font-weight:700;font-size:24px;margin-bottom:10px}
-.name{position:relative;width:480px;min-height:66px;padding:10px 40px;background:#3A3A42;border:1.5px solid var(--optb);border-radius:6px;
-  font-size:20px;display:flex;align-items:center;justify-content:center;text-align:center;transition:background .2s,transform .15s,opacity .2s}
-.name:hover:not(:disabled){background:#45454e;transform:translateY(-2px)}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 46px;text-align:center}
+#pcard h2{font-family:'Unbounded',sans-serif;font-weight:800;font-size:52px;line-height:1;margin-bottom:22px}
+#pcard p{font-weight:600;font-size:22px;line-height:1.45}
+#pcard.reveal{background:#0f1f6e}
+#pcard .who{font-family:'Unbounded',sans-serif;font-weight:800;font-size:34px;line-height:1.1;color:var(--gold);margin-bottom:14px}
+#pcard .role{font-size:20px;font-weight:600;color:var(--beige)}
+#pcard.swap{animation:cardin .45s ease}
+@keyframes cardin{0%{opacity:0;transform:translateY(18px) rotate(-1.5deg)}100%{opacity:1;transform:none}}
+#pnav{position:absolute;left:47px;right:47px;top:526px;display:flex;align-items:center;justify-content:space-between}
+#pdots{display:flex;gap:10px}
+#pdots i{width:40px;height:8px;border-radius:4px;background:#4a4a54;transition:background .3s}
+#pdots i.on{background:#fff}
+#pmore{height:48px;padding:0 18px;border-radius:24px;border:2px solid var(--beige);color:var(--beige);font-weight:700;font-size:17px;transition:background .2s,opacity .3s}
+#pmore:hover{background:rgba(225,198,169,.12)}
+#pmore:disabled{opacity:.3;cursor:default}
+#pright{position:absolute;left:0;top:596px;width:615px;height:484px;background:var(--panel2);border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;padding-top:30px;gap:16px}
+#pright h3{font-weight:800;font-size:28px;margin-bottom:4px}
+.name{position:relative;width:520px;min-height:74px;padding:10px 54px;background:var(--panel3);border:2px solid var(--optb);border-radius:10px;
+  font-size:22px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;transition:background .2s,transform .15s,opacity .2s}
+.name:hover:not(:disabled){background:#46464f;transform:translateY(-2px);border-color:#d0d0d6}
 .name:disabled{cursor:default}
-.name .mk{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-weight:700;font-size:22px}
-.name.bad{background:#26262c;opacity:.7;border-color:var(--bad)} .name.bad .mk::before{content:'✗';color:var(--bad)}
-.name.ok{border-color:var(--ok)} .name.ok .mk::before{content:'✓';color:var(--ok)}
+.name .mk{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-weight:800;font-size:26px}
+.name.bad{background:#26262c;opacity:.6;border-color:var(--bad)} .name.bad .mk::before{content:'✗';color:var(--bad)}
+.name.ok{border-color:var(--ok);background:rgba(63,191,127,.14)} .name.ok .mk::before{content:'✓';color:var(--ok)}
+#s-pista .btn-next{bottom:24px}
 
-/* ---------- 5.7 Completado ---------- */
-#s-done .panel{background:var(--blue);border:2px solid #0A0A12}
-#dtitle{position:absolute;left:50px;top:300px;white-space:nowrap;font-family:'Unbounded',sans-serif;font-weight:800;font-size:72px;line-height:.95;letter-spacing:-.02em;opacity:0}
-#dtitle.show{animation:dfade .7s ease forwards}
+/* ---------- Completado ---------- */
+#s-done .panel,#s-final .panel{background:var(--blue);border:2px solid #0A0A12}
+#dtitle{position:absolute;left:50px;top:250px;white-space:nowrap;font-family:'Unbounded',sans-serif;font-weight:800;font-size:72px;line-height:.95;letter-spacing:-.02em;opacity:0}
+#dtitle.show,#ftitle.show{animation:dfade .7s ease forwards}
 @keyframes dfade{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
-#s-done.final #dtitle{top:130px}
-#dscore{position:absolute;left:54px;top:480px;color:var(--beige);font-size:20px;font-weight:600}
-#dmsg{position:absolute;left:54px;top:320px;width:510px;font-size:19px;line-height:1.5;display:none;opacity:0}
-#s-done.final #dmsg{display:block;animation:dfade .7s ease .35s forwards}
-#dmsg p+p{margin-top:12px}
-#dstar{position:absolute;left:40px;bottom:30px;width:110px;height:110px}
+#dpts{position:absolute;left:54px;top:450px;font-family:'Unbounded',sans-serif;font-weight:800;font-size:56px;color:var(--gold);opacity:0}
+#dpts small{display:block;font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:var(--beige);letter-spacing:1px;margin-top:6px}
+#dpts.show{animation:dfade .6s ease .35s forwards}
+#dmsg{position:absolute;left:54px;top:590px;width:510px;font-size:21px;line-height:1.45;opacity:0}
+#dmsg.show{animation:dfade .6s ease .6s forwards}
+.bigstar-logo{position:absolute;left:40px;bottom:34px;width:120px;height:120px}
+
+/* ---------- Final ---------- */
+#flogo{position:absolute;left:50px;top:56px;width:330px}
+#ftitle{position:absolute;left:50px;top:220px;font-family:'Unbounded',sans-serif;font-weight:800;font-size:58px;line-height:1;color:#fff;opacity:0;white-space:nowrap}
+#fmsg{position:absolute;left:54px;top:310px;width:510px;font-size:20px;line-height:1.45}
+#fmsg p+p{margin-top:10px}
+#fscore{position:absolute;left:30px;right:30px;top:640px;height:220px;border-radius:14px;background:rgba(11,29,92,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+#fscore .lb{font-weight:700;font-size:16px;letter-spacing:2px;color:var(--beige)}
+#fscore .num{font-family:'Unbounded',sans-serif;font-weight:800;font-size:72px;color:var(--gold);line-height:1}
+#fstars{font-size:44px;letter-spacing:8px;color:#56609a}
+#fstars .on{color:var(--gold)}
+#fscore .rk{font-weight:700;font-size:19px}
+#btn-replay{position:absolute;right:28px;bottom:28px;height:60px;padding:0 10px 0 22px;border-radius:8px;background:#0b1d5c;display:flex;align-items:center;gap:12px;font-weight:700;font-size:19px}
+#btn-replay span{width:46px;height:46px;border-radius:6px;background:#B39367;display:flex;align-items:center;justify-content:center}
+#btn-replay svg{width:24px;height:24px}
 </style>
 </head>
 <body>
@@ -188,72 +272,109 @@ b,strong{font-weight:700}
 
   <div id="loader"><svg viewBox="0 0 100 100" data-star></svg></div>
 
-  <!-- 5.1 INICIO -->
+  <!-- INICIO -->
   <section class="screen" id="s-inicio" aria-label="Inicio">
-    <div id="ifoto"><img data-src="inicio" alt="Casa de la hacienda, Universidad de La Sabana"></div>
+    <img id="ifoto" data-src="inicio" alt="Casa de la hacienda, Universidad de La Sabana">
     <svg id="aro" aria-hidden="true"></svg>
     <div class="txt" id="itxt"></div>
-    <img class="logo" id="ilogo" data-src="logo" alt="3ª Temporada Rostros Unisabana">
+    <img class="logo fu" id="ilogo" data-src="logo" alt="3ª Temporada Rostros Unisabana" style="--d:.45s">
     <button id="btn-comenzar" aria-label="Comenzar"><span class="lbl">COMENZAR</span><span class="ar" data-icon="chev"></span></button>
   </section>
 
-  <!-- 5.2 BIENVENIDA -->
-  <section class="screen" id="s-bienvenida" aria-label="Bienvenida">
+  <!-- BIENVENIDA / CENTRO DEL JUEGO -->
+  <section class="screen" id="s-hub" aria-label="Bienvenida">
     <div data-bigstars></div>
     <div class="panel">
-      <div class="poster h" id="bposter"></div>
-      <div id="dicebox"><button id="dice" aria-label="Lanzar el dado">1</button></div>
-      <div class="right" id="bright"></div>
-      <div class="seal" style="right:-14px;top:-30px" data-seal></div>
+      <div class="poster h" id="hposter"></div>
+      <div class="seal" style="right:-16px;top:-34px" data-seal></div>
+      <div id="dicebox">
+        <button id="dice" aria-label="Lanzar el dado">1</button>
+        <button id="btn-final" aria-label="Ver resultado final"><span data-star-svg></span>VER MI RESULTADO</button>
+      </div>
+      <div id="htext"></div>
+      <div id="hprog">
+        <div class="head"><span class="kicker">Tu recorrido</span><span class="chip">Puntaje <span class="v" id="htotal">0</span></span></div>
+        <div id="tiles"></div>
+      </div>
     </div>
   </section>
 
-  <!-- 5.3 PRESENTACIÓN (una sola pantalla que se rellena por reto) -->
+  <!-- PRESENTACIÓN DEL RETO -->
   <section class="screen" id="s-intro" aria-label="Presentación del reto">
     <div class="panel">
-      <div class="tbox"><h1 id="ititle"></h1></div>
-      <div class="seal" style="right:-14px;top:-30px" data-seal></div>
+      <div class="tbox"><img class="ph" id="iphoto" alt=""><span class="kicker" id="ikicker"></span><h1 id="ititle"></h1></div>
+      <div class="seal" style="right:-16px;top:-34px" data-seal></div>
       <div class="desc" id="idesc"></div>
-      <button class="btn-next" id="inext" aria-label="Continuar"><span data-icon="chev"></span></button>
+      <div class="rules" id="irules"></div>
+      <button class="btn-next" id="inext" aria-label="Empezar el reto">Empezar<span class="ic" data-icon="chev"></span></button>
     </div>
   </section>
 
-  <!-- 5.4 QUIZ -->
+  <!-- RETO 1: PREGUNTAS -->
   <section class="screen" id="s-quiz" aria-label="Reto Exprés Rostros">
     <div class="panel" id="qpanel">
+      <div id="qhead"><span class="kicker" id="qnum"></span><div id="qdots"></div></div>
       <div id="timer" aria-live="polite">00:15</div>
-      <div id="qtext"></div>
-      <div id="qopts"></div>
-      <div id="qcount"></div>
-      <div class="seal" style="left:-20px;bottom:-24px;width:130px;height:130px" data-seal></div>
+      <div id="qscore" class="chip">Puntos <span class="v" id="qpts">0</span></div>
+      <div id="qflow">
+        <div id="qtext"></div>
+        <div id="qopts"></div>
+        <div id="qfb"><div class="t"></div><div class="d"></div></div>
+      </div>
+      <div class="seal" style="left:-22px;bottom:-26px;width:130px;height:130px" data-seal></div>
+      <button class="btn-next hidden" id="qnext" aria-label="Siguiente pregunta">Siguiente<span class="ic" data-icon="chev"></span></button>
     </div>
   </section>
 
-  <!-- 5.5 MEMORIA -->
+  <!-- RETO 2: MEMORIA -->
   <section class="screen" id="s-memoria" aria-label="Rostros que hacen historia">
-    <div class="panel"><div class="inner"><div id="grid"></div></div></div>
+    <div class="panel">
+      <div id="mhud">
+        <span class="chip">Parejas <span class="v" id="mpairs">0/6</span></span>
+        <span class="chip">Intentos <span class="v" id="mtries">0</span></span>
+        <span class="chip">⏱ <span class="v" id="mtime">00:00</span></span>
+      </div>
+      <div id="grid"></div>
+      <div id="mtoast"><span class="ck">✓</span><span class="tx"><small>Pareja encontrada</small><span id="mcap"></span></span></div>
+    </div>
   </section>
 
-  <!-- 5.6 PISTAS -->
+  <!-- RETOS 3 y 4: PISTAS -->
   <section class="screen" id="s-pista" aria-label="¿Quién soy?">
     <div class="panel" id="ppanel">
-      <div id="pcard"><h2 id="ptitle"></h2><p id="ptext"></p></div>
-      <div id="pbar"><i></i></div>
-      <div id="pright"><h3>¿Quién soy?</h3><div id="pnames" style="display:flex;flex-direction:column;gap:18px"></div></div>
+      <div id="phead"><span class="kicker" id="pround"></span><span class="chip">Vale <span class="v" id="pworth">300</span> pts</span></div>
+      <div id="pcard"></div>
+      <div id="pnav"><div id="pdots"></div><button id="pmore">Otra pista ›</button></div>
+      <div id="pright"><h3>¿Quién soy?</h3><div id="pnames" style="display:flex;flex-direction:column;gap:14px"></div></div>
+      <button class="btn-next hidden" id="pnext" aria-label="Continuar">Continuar<span class="ic" data-icon="chev"></span></button>
     </div>
   </section>
 
-  <!-- 5.7 COMPLETADO -->
+  <!-- RETO COMPLETADO -->
   <section class="screen" id="s-done" aria-label="Reto completado">
     <div class="panel">
-      <div class="seal" style="right:-14px;top:-30px" data-seal-blue></div>
+      <div class="seal" style="right:-16px;top:-34px" data-seal-blue></div>
       <h1 id="dtitle"></h1>
-      <div id="dscore"></div>
+      <div id="dpts"></div>
       <div id="dmsg"></div>
-      <svg id="dstar" viewBox="0 0 100 100" data-star></svg>
-      <button class="btn-next" id="dhome" aria-label="Volver al inicio"><span data-icon="home"></span></button>
+      <svg class="bigstar-logo" viewBox="0 0 100 100" data-star></svg>
+      <button class="btn-next" id="dnext" aria-label="Continuar">Continuar<span class="ic" data-icon="chev"></span></button>
     </div>
   </section>
+
+  <!-- FINAL -->
+  <section class="screen" id="s-final" aria-label="Final del juego">
+    <div class="panel">
+      <img id="flogo" data-src="logo" alt="3ª Temporada Rostros Unisabana">
+      <h1 id="ftitle"></h1>
+      <div id="fmsg"></div>
+      <div id="fscore"><span class="lb">PUNTAJE TOTAL</span><span class="num" id="fnum">0</span><div id="fstars"></div><span class="rk" id="frank"></span></div>
+      <svg class="bigstar-logo" viewBox="0 0 100 100" data-star></svg>
+      <button id="btn-replay" aria-label="Jugar de nuevo">Jugar de nuevo<span data-icon="replay"></span></button>
+    </div>
+  </section>
+
+  <canvas id="confetti" width="675" height="1200"></canvas>
 
   <button id="audio" aria-label="Silenciar o activar sonido">
     <svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path class="waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path class="slash" d="M16 9l6 6M22 9l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
@@ -263,81 +384,128 @@ b,strong{font-weight:700}
 
 <script>
 /* =====================================================================
-   CONFIG — edita aquí textos, preguntas, respuestas e imágenes
+   CONFIG — edita aquí textos, preguntas, pistas, puntajes e imágenes
    ===================================================================== */
 const CONFIG = {
   img: {
-    inicio: 'img/inicio.jpg',
+    inicio: 'img/inicio.webp',
     logo:   'img/logoRostros3.svg',
     memoria: ['img/memoria-1.jpg','img/memoria-2.jpg','img/memoria-3.jpg','img/memoria-4.jpg','img/memoria-5.jpg','img/memoria-6.jpg']
   },
 
   inicio: {
-    textosTop: 70,           // posición vertical del bloque de textos
-    mostrarLogoSVG: true,    // logoRostros3.svg debajo de los textos
-    logoTop: 360,
-    // Foto circular: usa inicio.jpg recortada. fotoPos mueve el encuadre (x% y%) para centrar la casa.
-    // Si prefieres otra foto, cambia CONFIG.img.inicio por otra imagen (p. ej. 'img/casa.jpg').
-    foto: { cx: 337, cy: 818, r: 205, fotoPos: '86% 50%' },
-    // Rueda de 4 colores que gira alrededor de la foto
-    aro: { mostrar: true, grosor: 46, separacion: 4, segundosPorVuelta: 10,
-           colores: ['#13288F', '#8E0F1F', '#DDB262', '#E3C4A0'] },
     t1: ['Un campus.','Muchos rostros.','Cientos de historias.','Tu reto es descubrirlas.'],
     t2: '¿Te atreves?',
-    t3: ['✨ Explora, encuentra las pistas','y pon a prueba cuánto sabes de']
+    t3: ['✨ Explora, encuentra las pistas','y pon a prueba cuánto sabes de'],
+    textosTop: 64,
+    logo: { top: 400, width: 400 },
+    // Foto en media luna (inicio.webp). left/top/width en px del escenario 675×1200.
+    foto: { left: -60, top: 600, width: 800 },
+    // Hueco circular del PNG, en proporción al ancho/alto de la imagen original (no tocar si no cambias la foto)
+    hueco: { cx: 0.7769, cy: 0.2624, r: 0.4085 },
+    // Rueda de 4 colores dentro del hueco
+    aro: { grosor: 34, separacion: 16, colores: ['#0C1F71', '#880415', '#DBB166', '#E1C6A9'] },
+    boton: 'centro'   // 'centro' = dentro de la rueda
   },
 
-  bienvenida: {
+  hub: {
     poster: ['CADA LUGAR GUARDA UNA HISTORIA.','CADA ROSTRO, UNA MEMORIA.'],
     texto: 'Bienvenido a <b>Rostros 3</b>. Recorre nuestra historia, descubre sus pistas y conecta los momentos que han construido la Universidad de La Sabana.',
     pregunta: '¿COMENZAMOS?',
-    instruccion: 'Haz clic en el dado y deja que el azar decida tu primer desafío.'
+    instruccion: 'Haz clic en el dado y deja que el azar decida tu primer desafío.',
+    instruccionSiguiente: 'Haz clic en el dado para descubrir tu siguiente desafío.',
+    instruccionFinal: '¡Completaste los cuatro retos! Mira tu resultado.'
   },
 
-  // Presentaciones de cada reto. size = tamaño del título en px
-  intros: {
-    1: { size: 80, title: '<span class="l1">Reto</span><span class="l2">Exprés<br>Rostros</span>',
+  retos: {
+    1: { nombre: 'Exprés Rostros', foto: 4, size: 80, kicker: 'Primer reto',
+         title: '<span class="l1">Reto</span><span class="l2">Exprés<br>Rostros</span>',
          desc: ['Primer reto | Pon a prueba tu memoria',
                 '<b>Cinco preguntas te llevarán por distintos momentos de la historia de la Universidad de La Sabana.</b>',
-                'Observa, recuerda y elige la respuesta correcta. <b>Cada acierto te acercará a descubrir las huellas que hacen parte de nuestra historia.</b>'] },
-    2: { size: 58, title: '<span class="l1">Segundo<br>reto</span><span class="l2">Rostros que<br>hacen<br>historia</span>',
+                'Observa, recuerda y elige la respuesta correcta. <b>Cada acierto te acercará a descubrir las huellas que hacen parte de nuestra historia.</b>'],
+         reglas: '15 segundos por pregunta · 100 puntos por acierto + bonus por rapidez' },
+    2: { nombre: 'Rostros que hacen historia', foto: 1, size: 58, kicker: 'Segundo reto',
+         title: '<span class="l1">Segundo<br>reto</span><span class="l2">Rostros que<br>hacen<br>historia</span>',
          desc: ['Haz clic en las tarjetas y encuentra las imágenes que cuentan una misma historia.',
                 '<b>Reconoce los rostros, los espacios y los momentos que hacen parte de la evolución de la Universidad de La Sabana.</b>',
-                'Cada pareja encontrada es una huella de nuestra <b>memoria institucional</b>.'] },
-    3: { size: 70, title: '<span class="lg">Descúbreme</span>',
+                'Cada pareja encontrada es una huella de nuestra <b>memoria institucional</b>.'],
+         reglas: '6 parejas · 100 puntos por pareja · menos intentos y menos tiempo = más puntos' },
+    3: { nombre: 'Descúbreme', foto: 3, size: 70, kicker: 'Tercer reto',
+         title: '<span class="lg">Descúbreme</span>',
          desc: ['<b>Dos rectores. Dos momentos. Una misma historia.</b>',
                 'Recibirás una <b>secuencia de pistas</b> que te llevará a descubrir quiénes son los protagonistas de este reto. Cada tarjeta revelará una nueva huella de su trayectoria y de su vínculo con la Universidad de La Sabana.',
-                '<b>Observa, conecta las pistas y descubre de quiénes se trata antes de llegar a la última tarjeta.</b>'] },
-    4: { size: 70, title: '<span class="l1">Encuentra</span><span class="l2">la salida</span>',
+                '<b>Observa, conecta las pistas y descubre de quiénes se trata antes de llegar a la última tarjeta.</b>'],
+         reglas: 'Adivina con 1 pista: 300 pts · con 2: 200 · con 3: 100 · cada error resta 50' },
+    4: { nombre: 'Encuentra la salida', foto: 5, size: 70, kicker: 'Cuarto reto',
+         title: '<span class="l1">Encuentra</span><span class="l2">la salida</span>',
          desc: ['<b>Cuarto reto | Sigue las huellas</b>',
                 'Tres pistas. Tres momentos. Una trayectoria.',
-                '<b>Conecta las respuestas y descubre al rector que representa un nuevo capítulo en la historia de La Sabana.</b>'] }
+                '<b>Conecta las respuestas y descubre al rector que representa un nuevo capítulo en la historia de La Sabana.</b>'],
+         reglas: 'Adivina con 1 pista: 300 pts · con 2: 200 · con 3: 100 · cada error resta 50' }
   },
 
-  // Reto 1. "c" = índice (0,1,2) de la respuesta correcta
+  // RETO 1 · c = índice (0,1,2) de la respuesta correcta · dato = explicación que aparece tras responder
   segundos: 15,
+  puntos: { acierto: 100, bonusPorSegundo: 5 },
   quiz: [
-    { q: '¿Dónde comenzó esta historia?', o: ['En el barrio universitario','En Chía','En una sede internacional'], c: 0 },
-    { q: 'La Universidad necesitaba crecer. ¿Qué decisión marcó un antes y un después?', o: ['Ampliar las instalaciones del barrio universitario','Comprar un nuevo terreno y trasladar el campus','Cambiar su modelo académico'], c: 1 },
-    { q: '¿Qué idea ha permanecido en el centro de los planes maestros de la Universidad?', o: ['Mantener la escala humana en sus edificaciones con un ecosistema humano','Construir edificios cada vez más grandes','Crecer sin modificar el campus'], c: 0 },
-    { q: '¿Cómo imagina la Universidad su humanismo hacia el futuro?', o: ['Un humanismo tradicional','Un humanismo exclusivamente tecnológico','Un humanismo aumentado'], c: 2 },
-    { q: '¿Qué no puede perder la Universidad mientras se transforma?', o: ['Sus tradiciones arquitectónicas','Su esencia y la centralidad de la persona','Su tamaño'], c: 1 }
+    { q: '¿Dónde comenzó esta historia?', o: ['En el barrio universitario','En Chía','En una sede internacional'], c: 0,
+      dato: 'Antes del campus de Chía, la Universidad dio sus primeros pasos en el barrio universitario.' },
+    { q: 'La Universidad necesitaba crecer. ¿Qué decisión marcó un antes y un después?', o: ['Ampliar las instalaciones del barrio universitario','Comprar un nuevo terreno y trasladar el campus','Cambiar su modelo académico'], c: 1,
+      dato: 'Se compró un terreno en Puente del Común (Chía) y allí se trasladó el campus, inaugurado el 7 de octubre de 1988.' },
+    { q: '¿Qué idea ha permanecido en el centro de los planes maestros de la Universidad?', o: ['Mantener la escala humana en sus edificaciones con un ecosistema humano','Construir edificios cada vez más grandes','Crecer sin modificar el campus'], c: 0,
+      dato: 'Los planes maestros imaginan el campus como una “aldea universitaria”: edificios a escala humana, pensados para el encuentro entre personas.' },
+    { q: '¿Cómo imagina la Universidad su humanismo hacia el futuro?', o: ['Un humanismo tradicional','Un humanismo exclusivamente tecnológico','Un humanismo aumentado'], c: 2,
+      dato: 'Un humanismo aumentado integra la tecnología y la innovación sin perder de vista la formación integral de la persona.' },
+    { q: '¿Qué no puede perder la Universidad mientras se transforma?', o: ['Sus tradiciones arquitectónicas','Su esencia y la centralidad de la persona','Su tamaño'], c: 1,
+      dato: 'El campus cambia y crece, pero la persona sigue en el centro de todo lo que hace la Universidad.' }
   ],
 
-  // Retos 3 y 4: puedes añadir más pistas a cada array
-  pistas: {
-    3: [ { titulo: 'Pista 1',
-           texto: 'Nací en Colombia en una época en la que el país vivía profundas transformaciones. Desde muy joven entendí que la educación podía ser una herramienta para transformar personas y construir sociedad. <b>¿Quién soy?</b>',
-           o: ['Rolando Roncancio','Octavio Arizmendi','Obdulio Velázquez'], c: 1 } ],
-    4: [ { titulo: 'Pista 2',
-           texto: 'Para mí, el futuro de la Universidad no depende solamente de sus edificios, de la tecnología o de la innovación. Hay algo que permanece en el centro: <b>la persona</b>. <b>¿Quién soy?</b>',
-           o: ['Álvaro Mendoza Ramírez','Rafael González Gigigas','Rolando Andrés Roncancio Rachid'], c: 2 } ]
+  // RETO 2 · rótulo de cada pareja (mismo orden que img.memoria)
+  memoria: {
+    rotulos: ['Hacienda Bella Colombia · 1984','El puente rojo','Llegada al campus','Estudiar al aire libre','Visita del M.I.T. Harvard Club de Colombia','La plaza de los Balcones'],
+    puntosPareja: 100, castigoFallo: 10, segundosBonus: 90, bonusPorSegundo: 2, minimo: 150
   },
 
-  final: ['<b>¡¡Felicidades!</b>',
-          '<b>Has recorrido las huellas de la historia de la Universidad de La Sabana.</b>',
-          'A través de sus <b>rostros, espacios y momentos</b>, descubriste parte del camino que nos ha traído hasta hoy.',
-          '<b>La historia continúa. ¿Te animas a seguir descubriéndola?</b>']
+  // RETOS 3 y 4 · cada "ronda" es un personaje con hasta 3 pistas
+  pistasPuntos: [300, 200, 100], castigoError: 50,
+  pistas: {
+    3: [
+      { o: ['Rolando Roncancio Rachid','Octavio Arizmendi Posada','Obdulio Velásquez Posada'], c: 1,
+        quien: 'Octavio Arizmendi Posada', rol: 'Fundador y primer rector (1979-1989)',
+        p: ['Nací en Colombia en una época en la que el país vivía profundas transformaciones. Desde muy joven entendí que la educación podía ser una herramienta para transformar personas y construir sociedad.',
+            'Estudié Derecho en la Universidad de Antioquia y serví al país como gobernador de Antioquia y ministro de Educación.',
+            'Fui el primer rector de La Sabana. Hoy la biblioteca del campus lleva mi nombre.'] },
+      { o: ['Álvaro Mendoza Ramírez','Obdulio Velásquez Posada','Rafael González Cagigas'], c: 1,
+        quien: 'Obdulio Velásquez Posada', rol: 'Rector (2005-2020)',
+        p: ['Durante años trabajé muy cerca del primer rector de la Universidad. Muchos me consideraban su mano derecha.',
+            'Estuve 15 años al frente de La Sabana. En mi rectoría se formuló el Plan Estratégico Institucional 2018-2029.',
+            'En diciembre de 2020 entregué la rectoría y volví a las aulas como profesor de la Facultad de Derecho y Ciencias Políticas.'] }
+    ],
+    4: [
+      { o: ['Álvaro Mendoza Ramírez','Rafael González Cagigas','Rolando Andrés Roncancio Rachid'], c: 2,
+        quien: 'Rolando Andrés Roncancio Rachid', rol: 'Rector desde 2020',
+        p: ['Estudié Derecho en La Sabana y después hice el MBA en INALDE Business School.',
+            'Para mí, el futuro de la Universidad no depende solamente de sus edificios, de la tecnología o de la innovación. Hay algo que permanece en el centro: <b>la persona</b>.',
+            'En 2020 me convertí en el primer graduado de la Universidad en asumir la rectoría.'] }
+    ]
+  },
+
+  completado: {
+    1: '¡Buena memoria! Ya conoces cómo empezó todo.',
+    2: 'Cada pareja fue una huella de nuestra memoria institucional.',
+    3: 'Dos rectores, dos momentos, una misma historia.',
+    4: 'Seguiste las huellas hasta un nuevo capítulo.'
+  },
+
+  final: {
+    titulo: '¡¡Felicidades!',
+    texto: ['<b>Has recorrido las huellas de la historia de la Universidad de La Sabana.</b>',
+            'A través de sus <b>rostros, espacios y momentos</b>, descubriste parte del camino que nos ha traído hasta hoy.',
+            '<b>La historia continúa. ¿Te animas a seguir descubriéndola?</b>'],
+    rangos: [ { min: .75, estrellas: 3, texto: 'Guardián de la memoria' },
+              { min: .45, estrellas: 2, texto: 'Explorador de huellas' },
+              { min: 0,   estrellas: 1, texto: 'Nuevo rostro de la historia' } ]
+  }
 };
 
 /* =====================================================================
@@ -347,20 +515,26 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const wait = ms => new Promise(r => setTimeout(r, ms));
+const mmss = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
 
-// Escalado del escenario 675×1200 al tamaño del iframe
 function fit() {
   const s = Math.min(window.innerWidth / 675, window.innerHeight / 1200);
   $('#stage').style.transform = `scale(${s})`;
 }
 window.addEventListener('resize', fit); fit();
 
-/* ---------- SVG: estrella Rostros, sello y estrellas de fondo ---------- */
-const STAR_SVG = `
-  <path d="M50 1 Q42 42 1 50 L44 50 L50 44 Z" fill="#DDB262"/>
-  <path d="M50 1 Q58 42 99 50 L56 50 L50 44 Z" fill="#8E0F1F"/>
-  <path d="M99 50 Q58 58 50 99 L50 56 L56 50 Z" fill="#13288F"/>
-  <path d="M1 50 Q42 58 50 99 L50 56 L44 50 Z" fill="#E3C4A0"/>`;
+/* ---------- Gráficos: estrella Rostros (como en el logo), sellos, iconos ---------- */
+// 4 cuartos de anillo centrados en las esquinas, igual que la estrella de logoRostros3.svg
+function quarter(cx, cy, ro, ri, a0, color) {
+  const p = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)].map(v => v.toFixed(2)).join(' ');
+  const a1 = a0 + Math.PI / 2;
+  return `<path fill="${color}" d="M${p(ro, a0)} A${ro} ${ro} 0 0 1 ${p(ro, a1)} L${p(ri, a1)} A${ri} ${ri} 0 0 0 ${p(ri, a0)}Z"/>`;
+}
+const STAR_SVG =
+  quarter(100, 0, 59, 40, Math.PI / 2, '#E1C6A9') +
+  quarter(0, 0, 57, 38, 0, '#DBB166') +
+  quarter(0, 100, 59, 40, -Math.PI / 2, '#880415') +
+  quarter(100, 100, 57, 40, Math.PI, '#0C1F71');
 function burst(points, rO, rI, color) {
   let d = '';
   for (let i = 0; i < points * 2; i++) {
@@ -371,12 +545,13 @@ function burst(points, rO, rI, color) {
 }
 const ICONS = {
   chev: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  home: '<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3z" fill="#fff"/></svg>'
+  replay: '<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v5h5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 const EYE = '<svg viewBox="0 0 64 40"><path d="M2 20C14 2 50 2 62 20 50 38 14 38 2 20Z" fill="#fff"/><circle cx="32" cy="20" r="11" fill="#121219"/><circle cx="35.5" cy="16.5" r="3.2" fill="#fff"/></svg>';
 
 $$('[data-star]').forEach(e => e.innerHTML = STAR_SVG);
-$$('[data-seal]').forEach(e => e.innerHTML = burst(14, 49, 40, '#141418') + `<svg class="star" viewBox="0 0 100 100">${STAR_SVG}</svg>`);
+$$('[data-star-svg]').forEach(e => e.innerHTML = `<svg viewBox="0 0 100 100" style="width:70px;height:70px">${STAR_SVG}</svg>`);
+$$('[data-seal]').forEach(e => e.innerHTML = burst(14, 49, 40, '#121216') + `<svg class="star" viewBox="0 0 100 100">${STAR_SVG}</svg>`);
 $$('[data-seal-blue]').forEach(e => e.innerHTML = burst(14, 49, 40, '#0F2170'));
 $$('[data-icon]').forEach(e => e.innerHTML = ICONS[e.dataset.icon]);
 $$('[data-bigstars]').forEach(e => {
@@ -384,17 +559,14 @@ $$('[data-bigstars]').forEach(e => {
   e.innerHTML = big(-300, -230, 620, 10) + big(300, 760, 640, -8);
 });
 
-/* ---------- Imágenes con fallback ---------- */
-function fallback(el, src) {
-  const d = document.createElement('div');
-  d.className = 'img-fallback ' + (el.className || '');
-  d.style.cssText = el.style.cssText;
-  if (el.classList.contains('bg')) d.style.cssText += ';position:absolute;inset:0;';
-  d.textContent = src;
-  el.replaceWith(d);
-}
+/* ---------- Imágenes con aviso si faltan ---------- */
 function setImg(el, src) {
-  el.onerror = () => fallback(el, src);
+  el.onerror = () => {
+    const d = document.createElement('div');
+    d.className = 'img-fallback ' + (el.className || ''); d.id = el.id;
+    d.style.cssText = el.style.cssText; d.textContent = 'Falta: ' + src;
+    el.replaceWith(d);
+  };
   el.src = src;
 }
 function preload(list) {
@@ -402,6 +574,28 @@ function preload(list) {
     Promise.all(list.map(src => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = src; }))),
     wait(8000)
   ]);
+}
+// Ajusta un título para que no se salga de su caja
+function fitTitle(el, base, maxW) {
+  let size = base; el.style.fontSize = size + 'px';
+  while (el.offsetWidth > maxW && size > 24) { size -= 2; el.style.fontSize = size + 'px'; }
+}
+// Contador animado
+function countTo(el, to, ms = 900) {
+  const from = +el.dataset.v || 0, t0 = performance.now();
+  el.dataset.v = to;
+  const step = t => { const k = Math.min(1, (t - t0) / ms); el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+// "+100" flotante
+function floatPts(txt, x, y) {
+  const d = document.createElement('div'); d.className = 'float-pts'; d.textContent = txt;
+  d.style.left = x + 'px'; d.style.top = y + 'px'; $('#stage').appendChild(d);
+  setTimeout(() => d.remove(), 1300);
+}
+function stagePos(el) {
+  const r = el.getBoundingClientRect(), s = $('#stage').getBoundingClientRect(), k = s.width / 675;
+  return { x: (r.left - s.left) / k + r.width / k / 2 - 40, y: (r.top - s.top) / k - 10 };
 }
 
 /* =====================================================================
@@ -421,9 +615,11 @@ const Snd = {
     o.connect(g).connect(this.ctx.destination); o.start(t); o.stop(t + d + .03);
   },
   click() { this.tone(660, .06, 'triangle', .08); },
+  flip()  { this.tone(420, .05, 'triangle', .06); },
   ok()    { this.tone(523, .12, 'sine', .16); this.tone(784, .2, 'sine', .16, .1); },
   bad()   { this.tone(170, .28, 'square', .05); },
   win()   { [523, 659, 784, 1047].forEach((f, i) => this.tone(f, .22, 'triangle', .12, i * .11)); },
+  fanfare(){ [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => this.tone(f, .26, 'triangle', .12, i * .13)); },
   tick()  { this.tone(1250, .03, 'square', .025); }
 };
 document.addEventListener('pointerdown', () => Snd.init());
@@ -432,89 +628,122 @@ $('#audio').addEventListener('click', e => {
 });
 
 /* =====================================================================
+   Confeti con los colores de la marca
+   ===================================================================== */
+const Confetti = (() => {
+  const cv = $('#confetti'), ctx = cv.getContext('2d'), cols = ['#DBB166', '#E1C6A9', '#880415', '#2340c4', '#ffffff'];
+  let parts = [], raf = null;
+  function burstAt(n = 140) {
+    for (let i = 0; i < n; i++) parts.push({
+      x: 337 + (Math.random() - .5) * 200, y: 420 + (Math.random() - .5) * 80,
+      vx: (Math.random() - .5) * 16, vy: -Math.random() * 16 - 6, g: .42 + Math.random() * .2,
+      w: 8 + Math.random() * 8, h: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+      c: cols[Math.floor(Math.random() * cols.length)], life: 0
+    });
+    if (!raf) raf = requestAnimationFrame(loop);
+  }
+  function loop() {
+    ctx.clearRect(0, 0, 675, 1200);
+    parts.forEach(p => { p.vy += p.g; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.life / 6))); ctx.restore(); });
+    parts = parts.filter(p => p.y < 1260);
+    raf = parts.length ? requestAnimationFrame(loop) : (ctx.clearRect(0, 0, 675, 1200), null);
+  }
+  return { fire(n) { burstAt(n); } };
+})();
+
+/* =====================================================================
    Estado y navegación
    ===================================================================== */
-const state = { done: new Set(), current: null };
-let timers = [];               // timeouts/intervals activos de la pantalla actual
+const state = { done: {}, current: null, firstRoll: true };   // done[n] = puntos obtenidos en el reto n
+const total = () => Object.values(state.done).reduce((a, b) => a + b, 0);
+let timers = [];
 function clearTimers() { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); timers = []; }
 function later(fn, ms) { const t = setTimeout(fn, ms); timers.push(t); return t; }
-
+function every(fn, ms) { const t = setInterval(fn, ms); timers.push(t); return t; }
 function showScreen(id) {
   clearTimers();
   $$('.screen').forEach(s => s.classList.toggle('active', s.id === 's-' + id));
 }
-// Fundido corto dentro de la misma pantalla (para pasar de pregunta/pista)
 function fadeSwap(el, fn) {
   el.style.transition = 'opacity .25s'; el.style.opacity = 0;
   later(() => { fn(); el.style.opacity = 1; }, 260);
 }
 
-/* ---------- 5.1 Inicio ---------- */
+/* ---------- INICIO ---------- */
 function buildInicio() {
   const c = CONFIG.inicio, t = $('#itxt');
   t.style.top = c.textosTop + 'px';
   t.innerHTML =
     `<div class="t1 fu" style="--d:.1s">${c.t1.join('<br>')}</div>` +
-    `<div class="t2 fu" style="--d:.2s">${c.t2}</div>` +
-    `<div class="t3 fu" style="--d:.3s">${c.t3.join('<br>')}</div>`;
-  const l = $('#ilogo');
-  if (c.mostrarLogoSVG) { l.style.top = c.logoTop + 'px'; l.classList.add('fu'); l.style.setProperty('--d', '.4s'); }
-  else l.style.display = 'none';
-  const f = c.foto, fo = $('#ifoto');
-  fo.style.cssText = `left:${f.cx - f.r}px;top:${f.cy - f.r}px;width:${f.r * 2}px;height:${f.r * 2}px`;
-  fo.querySelector('img').style.objectPosition = f.fotoPos;
-  const a = c.aro, aro = $('#aro');
-  if (!a.mostrar) { aro.style.display = 'none'; return; }
-  const r = f.r + a.separacion + a.grosor / 2, m = r + a.grosor / 2 + 2, size = m * 2, C = 2 * Math.PI * r, q = C / 4;
-  aro.setAttribute('viewBox', `0 0 ${size} ${size}`);
-  aro.style.cssText = `left:${f.cx - m}px;top:${f.cy - m}px;width:${size}px;height:${size}px;animation-duration:${a.segundosPorVuelta}s`;
-  // 4 cuartos de anillo, uno por color
+    `<div class="t2 fu" style="--d:.22s">${c.t2}</div>` +
+    `<div class="t3 fu" style="--d:.34s">${c.t3.join('<br>')}</div>`;
+  const l = $('#ilogo'); l.style.top = c.logo.top + 'px'; l.style.width = c.logo.width + 'px';
+  // Foto media luna
+  const f = c.foto, fo = $('#ifoto'), H = f.width * 1536 / 2044;
+  fo.style.cssText = `left:${f.left}px;top:${f.top}px;width:${f.width}px;height:${H}px`;
+  // Centro y radio del hueco en el escenario
+  const hx = f.left + c.hueco.cx * f.width, hy = f.top + c.hueco.cy * H, hr = c.hueco.r * f.width;
+  const a = c.aro, r = hr - a.separacion - a.grosor / 2, m = r + a.grosor / 2 + 2, C = 2 * Math.PI * r, q = C / 4;
+  const aro = $('#aro');
+  aro.setAttribute('viewBox', `0 0 ${m * 2} ${m * 2}`);
+  aro.style.cssText = `left:${hx - m}px;top:${hy - m}px;width:${m * 2}px;height:${m * 2}px`;
   aro.innerHTML = a.colores.map((col, i) =>
     `<circle cx="${m}" cy="${m}" r="${r}" fill="none" stroke="${col}" stroke-width="${a.grosor}"
-       stroke-dasharray="${q} ${C - q}" stroke-dashoffset="${-q * i}" transform="rotate(-90 ${m} ${m})"/>`).join('');
+      stroke-dasharray="${q} ${C - q}" stroke-dashoffset="${-q * i}" transform="rotate(-90 ${m} ${m})"/>`).join('');
+  const b = $('#btn-comenzar');
+  b.style.left = (hx - 125) + 'px'; b.style.top = (hy - 44) + 'px';
 }
-$('#btn-comenzar').addEventListener('click', () => { Snd.click(); goBienvenida(); });
+$('#btn-comenzar').addEventListener('click', () => { Snd.click(); goHub(); });
 
-/* ---------- 5.2 Bienvenida + dado ---------- */
-function buildBienvenida() {
-  const c = CONFIG.bienvenida;
-  $('#bposter').innerHTML = c.poster.join('<br>');
-  $('#bright').innerHTML = `<p>${c.texto}</p><div class="poster">${c.pregunta}</div><p class="inst">${c.instruccion}</p>`;
-}
+/* ---------- HUB (Bienvenida + dado + progreso) ---------- */
+function buildHub() { $('#hposter').innerHTML = CONFIG.hub.poster.join('<br>'); }
 let rolling = false;
-function goBienvenida() { rolling = false; $('#dice').textContent = '1'; showScreen('bienvenida'); fitTitle($('#bposter'), 42, 470); }
+function goHub(highlight) {
+  rolling = false;
+  const h = CONFIG.hub, n = Object.keys(state.done).length, all = n === 4;
+  $('#dice').textContent = '?';
+  $('#dice').classList.toggle('gone', all);
+  $('#btn-final').classList.toggle('show', all);
+  $('#htext').innerHTML = `<p>${h.texto}</p><div class="poster">${n ? (all ? '¡LO LOGRASTE!' : `VAS ${n} DE 4`) : h.pregunta}</div>` +
+    `<p class="inst">${all ? h.instruccionFinal : (n ? h.instruccionSiguiente : h.instruccion)}</p>`;
+  $('#tiles').innerHTML = [1, 2, 3, 4].map(k => {
+    const d = state.done[k] !== undefined;
+    return `<div class="tile ${d ? 'done' : ''} ${highlight === k ? 'next' : ''}"><div class="n">${k}</div><div class="nm">${CONFIG.retos[k].nombre}</div>
+      <div class="st">${d ? state.done[k] + ' puntos' : 'Pendiente'}</div></div>`;
+  }).join('');
+  $('#htotal').textContent = total();
+  showScreen('hub');
+  fitTitle($('#hposter'), 44, 460);
+}
 $('#dice').addEventListener('click', () => {
   if (rolling) return; rolling = true; Snd.click();
-  const pend = [1, 2, 3, 4].filter(n => !state.done.has(n));
-  const pool = pend.length ? pend : [1, 2, 3, 4];
+  const pool = [1, 2, 3, 4].filter(k => state.done[k] === undefined);
   const target = pool[Math.floor(Math.random() * pool.length)];
-  const dice = $('#dice'), steps = 8; let i = 0, last = +dice.textContent;
-  const iv = setInterval(() => {
+  const dice = $('#dice'), steps = 9; let i = 0, last = 0;
+  const iv = every(() => {
     dice.classList.remove('flip'); void dice.offsetWidth; dice.classList.add('flip');
     let n; if (i < steps) { do { n = 1 + Math.floor(Math.random() * 4); } while (n === last); } else n = target;
     last = n; setTimeout(() => dice.textContent = n, 75); Snd.tick();
-    if (++i > steps) { clearInterval(iv); later(() => goIntro(target), 750); }
+    if (++i > steps) {
+      clearInterval(iv); Snd.ok();
+      $$('.tile')[target - 1].classList.add('next');
+      later(() => goIntro(target), 900);
+    }
   }, 150);
-  timers.push(iv);
 });
+$('#btn-final').addEventListener('click', () => { Snd.click(); goFinal(); });
 
-/* Ajusta el tamaño de un título para que no se salga de su caja */
-function fitTitle(el, base, maxW) {
-  let size = base; el.style.fontSize = size + 'px';
-  while (el.offsetWidth > maxW && size > 24) { size -= 2; el.style.fontSize = size + 'px'; }
-}
+/* ---------- PRESENTACIONES ---------- */
 let lastIntro = null;
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
-  if (lastIntro) fitTitle($('#ititle'), CONFIG.intros[lastIntro].size, 520);
-  fitTitle($('#bposter'), 42, 470);
-});
-
-/* ---------- 5.3 Presentaciones ---------- */
 function goIntro(n) {
-  state.current = n;
-  const c = CONFIG.intros[n];
-  $('#ititle').innerHTML = c.title; lastIntro = n;
+  state.current = n; lastIntro = n;
+  const c = CONFIG.retos[n];
+  $('#ikicker').textContent = c.kicker;
+  $('#ititle').innerHTML = c.title;
+  setImg($('#iphoto'), CONFIG.img.memoria[c.foto]);
   $('#idesc').innerHTML = c.desc.map(p => `<p>${p}</p>`).join('');
+  $('#irules').textContent = c.reglas;
   showScreen('intro');
   fitTitle($('#ititle'), c.size, 520);
 }
@@ -523,14 +752,21 @@ $('#inext').addEventListener('click', () => {
   const n = state.current;
   if (n === 1) startQuiz(); else if (n === 2) startMemoria(); else startPistas(n);
 });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
+  if (lastIntro) fitTitle($('#ititle'), CONFIG.retos[lastIntro].size, 520);
+  fitTitle($('#hposter'), 44, 460);
+});
 
-/* ---------- 5.4 Quiz ---------- */
-let qi = 0, score = 0, left = 0, qLocked = false;
-function startQuiz() { qi = 0; score = 0; showScreen('quiz'); renderQ(); }
+/* ---------- RETO 1 · PREGUNTAS ---------- */
+let qi = 0, qScore = 0, qLeft = 0, qLocked = false, qTimer = null, qRes = [];
+function startQuiz() { qi = 0; qScore = 0; qRes = []; $('#qpts').textContent = '0'; $('#qpts').dataset.v = 0; showScreen('quiz'); renderQ(); }
 function renderQ() {
-  const d = CONFIG.quiz[qi]; qLocked = false;
+  const d = CONFIG.quiz[qi], N = CONFIG.quiz.length; qLocked = false;
+  $('#qnum').textContent = `Pregunta ${qi + 1} de ${N}`;
+  $('#qdots').innerHTML = CONFIG.quiz.map((_, k) => `<i class="${k < qi ? qRes[k] : (k === qi ? 'cur' : '')}"></i>`).join('');
   $('#qtext').textContent = d.q;
-  $('#qcount').textContent = `Pregunta ${qi + 1} de ${CONFIG.quiz.length}`;
+  $('#qfb').classList.remove('show');
+  $('#qnext').classList.add('hidden');
   const box = $('#qopts'); box.innerHTML = '';
   shuffle(d.o.map((t, i) => ({ t, i }))).forEach(o => {
     const b = document.createElement('button');
@@ -542,44 +778,64 @@ function renderQ() {
   startTimer();
 }
 function setTimer() {
-  const t = $('#timer'); t.textContent = '00:' + String(Math.max(left, 0)).padStart(2, '0');
-  t.classList.toggle('warn', left <= 5);
+  const t = $('#timer'); t.textContent = '00:' + String(Math.max(qLeft, 0)).padStart(2, '0');
+  t.style.setProperty('--p', (Math.max(qLeft, 0) / CONFIG.segundos * 100) + '%');
+  t.classList.toggle('warn', qLeft <= 5 && !qLocked);
 }
 function startTimer() {
-  left = CONFIG.segundos; setTimer();
-  const iv = setInterval(() => {
-    left--; setTimer();
-    if (left > 0 && left <= 5) Snd.tick();
-    if (left <= 0) { clearInterval(iv); answerQ(null); }
+  qLeft = CONFIG.segundos; setTimer();
+  qTimer = every(() => {
+    qLeft--; setTimer();
+    if (qLeft > 0 && qLeft <= 5) Snd.tick();
+    if (qLeft <= 0) { clearInterval(qTimer); answerQ(null); }
   }, 1000);
-  timers.push(iv); qTimer = iv;
 }
-let qTimer = null;
 function answerQ(btn) {
   if (qLocked) return; qLocked = true; clearInterval(qTimer);
   $('#timer').classList.remove('warn');
-  $$('#qopts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('ok'); });
-  if (btn) {
-    if (btn.dataset.ok) { score++; Snd.ok(); } else { btn.classList.add('bad'); Snd.bad(); }
+  const d = CONFIG.quiz[qi], right = d.o[d.c];
+  $$('#qopts .opt').forEach(b => { b.disabled = true; if (b.dataset.ok) b.classList.add('ok'); else if (b !== btn) b.classList.add('dim'); });
+  const fb = $('#qfb'), t = fb.querySelector('.t');
+  if (btn && btn.dataset.ok) {
+    const pts = CONFIG.puntos.acierto + Math.max(qLeft, 0) * CONFIG.puntos.bonusPorSegundo;
+    qScore += pts; qRes[qi] = 'ok'; Snd.ok();
+    t.className = 't ok'; t.textContent = `¡Correcto! +${pts} puntos`;
+    const p = stagePos(btn); floatPts('+' + pts, p.x, p.y);
+    countTo($('#qpts'), qScore); $('#qscore').classList.remove('pop'); void $('#qscore').offsetWidth; $('#qscore').classList.add('pop');
+  } else if (btn) {
+    btn.classList.add('bad'); qRes[qi] = 'bad'; Snd.bad();
+    t.className = 't bad'; t.textContent = `Casi. La respuesta era: ${right}`;
+  } else {
+    qRes[qi] = 'bad'; Snd.bad();
+    t.className = 't to'; t.textContent = `¡Se acabó el tiempo! Era: ${right}`;
   }
-  later(() => {
-    qi++;
-    if (qi < CONFIG.quiz.length) fadeSwap($('#qpanel'), renderQ);
-    else goDone(1);
-  }, 1500);
+  fb.querySelector('.d').textContent = d.dato;
+  fb.classList.add('show');
+  $('#qdots i')[qi]; $$('#qdots i')[qi].className = qRes[qi];
+  $('#qnext').querySelector('span.ic').previousSibling.textContent = qi < CONFIG.quiz.length - 1 ? 'Siguiente' : 'Terminar';
+  $('#qnext').classList.remove('hidden');
 }
+$('#qnext').addEventListener('click', () => {
+  if (!qLocked) return; Snd.click();
+  qi++;
+  if (qi < CONFIG.quiz.length) fadeSwap($('#qflow'), renderQ);
+  else goDone(1, qScore, `${qRes.filter(r => r === 'ok').length} de ${CONFIG.quiz.length} respuestas correctas`);
+});
 
-/* ---------- 5.5 Memoria ---------- */
-let mFirst = null, mLock = false, mFound = 0;
+/* ---------- RETO 2 · MEMORIA ---------- */
+let mFirst = null, mLock = false, mFound = 0, mTries = 0, mMiss = 0, mSec = 0, mClock = null;
 function startMemoria() {
-  mFirst = null; mLock = false; mFound = 0;
+  mFirst = null; mLock = false; mFound = 0; mTries = 0; mMiss = 0; mSec = 0; mClock = null;
+  const M = CONFIG.img.memoria.length;
+  $('#mpairs').textContent = `0/${M}`; $('#mtries').textContent = '0'; $('#mtime').textContent = '00:00';
+  $('#mtoast').classList.remove('show');
   const grid = $('#grid'); grid.innerHTML = '';
-  shuffle([...CONFIG.img.memoria, ...CONFIG.img.memoria]).forEach((src, k) => {
+  shuffle([...CONFIG.img.memoria.keys(), ...CONFIG.img.memoria.keys()]).forEach((k, idx) => {
     const c = document.createElement('div');
-    c.className = 'card'; c.dataset.src = src; c.tabIndex = 0;
-    c.setAttribute('role', 'button'); c.setAttribute('aria-label', 'Carta ' + (k + 1));
-    c.innerHTML = `<div class="in"><div class="face back">${EYE}</div><div class="face front"><img alt="Foto histórica de la Universidad de La Sabana"></div></div>`;
-    setImg(c.querySelector('img'), src);
+    c.className = 'card'; c.dataset.k = k; c.tabIndex = 0;
+    c.setAttribute('role', 'button'); c.setAttribute('aria-label', 'Carta ' + (idx + 1));
+    c.innerHTML = `<div class="in"><div class="face back">${EYE}</div><div class="face front"><img alt="${CONFIG.memoria.rotulos[k]}"><div class="cap">${CONFIG.memoria.rotulos[k]}</div></div></div>`;
+    setImg(c.querySelector('img'), CONFIG.img.memoria[k]);
     c.addEventListener('click', () => flipCard(c));
     c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipCard(c); } });
     grid.appendChild(c);
@@ -588,66 +844,143 @@ function startMemoria() {
 }
 function flipCard(c) {
   if (mLock || c.classList.contains('open')) return;
-  Snd.click(); c.classList.add('open');
+  if (!mClock) mClock = every(() => { mSec++; $('#mtime').textContent = mmss(mSec); }, 1000);
+  Snd.flip(); c.classList.add('open');
   if (!mFirst) { mFirst = c; return; }
-  const a = mFirst; mFirst = null; mLock = true;
-  if (a.dataset.src === c.dataset.src) {
+  const a = mFirst; mFirst = null; mLock = true; mTries++;
+  $('#mtries').textContent = mTries;
+  const M = CONFIG.img.memoria.length;
+  if (a.dataset.k === c.dataset.k) {
     later(() => {
       [a, c].forEach(x => x.classList.add('matched')); Snd.ok(); mFound++;
-      later(() => [a, c].forEach(x => x.classList.add('settled')), 700);
-      if (mFound === CONFIG.img.memoria.length) later(() => goDone(2), 800);
-      else mLock = false;
+      $('#mpairs').textContent = `${mFound}/${M}`;
+      $('#mcap').textContent = CONFIG.memoria.rotulos[+c.dataset.k];
+      const t = $('#mtoast'); t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+      const p = stagePos(c); floatPts('+' + CONFIG.memoria.puntosPareja, p.x, p.y + 60);
+      if (mFound === M) {
+        clearInterval(mClock);
+        const m = CONFIG.memoria;
+        const pts = Math.max(m.minimo, M * m.puntosPareja - mMiss * m.castigoFallo + Math.max(0, m.segundosBonus - mSec) * m.bonusPorSegundo);
+        later(() => goDone(2, pts, `${M} parejas en ${mTries} intentos y ${mmss(mSec)}`), 1600);
+      } else mLock = false;
     }, 450);
   } else {
-    later(() => { [a, c].forEach(x => x.classList.remove('open')); mLock = false; }, 900 + 450);
+    mMiss++;
+    later(() => { [a, c].forEach(x => x.classList.add('miss')); Snd.bad(); }, 500);
+    later(() => { [a, c].forEach(x => x.classList.remove('open', 'miss')); mLock = false; }, 1250);
   }
 }
 
-/* ---------- 5.6 Pistas ---------- */
-let pReto = 3, pIdx = 0;
-function startPistas(n) { pReto = n; pIdx = 0; showScreen('pista'); renderPista(); }
-function renderPista() {
-  const list = CONFIG.pistas[pReto], d = list[pIdx];
-  $('#ptitle').textContent = d.titulo;
-  $('#ptext').innerHTML = d.texto;
-  $('#pbar i').style.width = ((pIdx + 1) / list.length * 100) + '%';
+/* ---------- RETOS 3 y 4 · PISTAS ---------- */
+let pReto = 3, pRound = 0, pShown = 1, pScore = 0, pErr = 0, pDone = false;
+function startPistas(n) { pReto = n; pRound = 0; pScore = 0; showScreen('pista'); renderRound(); }
+function worth() { return Math.max(0, CONFIG.pistasPuntos[pShown - 1] - pErr * CONFIG.castigoError); }
+function renderRound() {
+  const list = CONFIG.pistas[pReto], d = list[pRound];
+  pShown = 1; pErr = 0; pDone = false;
+  $('#pround').textContent = list.length > 1 ? `Rector ${pRound + 1} de ${list.length}` : 'Una trayectoria';
+  $('#pnext').classList.add('hidden');
   const box = $('#pnames'); box.innerHTML = '';
   shuffle(d.o.map((t, i) => ({ t, i }))).forEach(o => {
     const b = document.createElement('button');
     b.className = 'name'; b.innerHTML = `<span class="mk"></span><span>${o.t}</span>`;
-    b.addEventListener('click', () => {
-      if (o.i === d.c) {
-        b.classList.add('ok'); Snd.ok();
-        $$('#pnames .name').forEach(x => x.disabled = true);
-        later(() => {
-          pIdx++;
-          if (pIdx < list.length) fadeSwap($('#ppanel'), renderPista); else goDone(pReto);
-        }, 1200);
-      } else { b.classList.add('bad'); b.disabled = true; Snd.bad(); }
-    });
+    b.addEventListener('click', () => guess(b, o.i === d.c));
     box.appendChild(b);
   });
+  renderPista();
 }
+function renderPista() {
+  const d = CONFIG.pistas[pReto][pRound], card = $('#pcard');
+  card.className = ''; void card.offsetWidth; card.className = 'swap';
+  card.innerHTML = `<h2>Pista ${pShown}</h2><p>${d.p[pShown - 1]} <b>¿Quién soy?</b></p>`;
+  $('#pdots').innerHTML = d.p.map((_, k) => `<i class="${k < pShown ? 'on' : ''}"></i>`).join('');
+  $('#pmore').disabled = pShown >= d.p.length;
+  $('#pmore').textContent = pShown >= d.p.length ? 'Última pista' : 'Otra pista ›';
+  updWorth();
+}
+function updWorth() { const w = $('#pworth'); w.textContent = worth(); w.parentElement.classList.remove('pop'); void w.offsetWidth; w.parentElement.classList.add('pop'); }
+$('#pmore').addEventListener('click', () => {
+  const d = CONFIG.pistas[pReto][pRound];
+  if (pDone || pShown >= d.p.length) return;
+  Snd.flip(); pShown++; renderPista();
+});
+function guess(b, ok) {
+  if (pDone) return;
+  const d = CONFIG.pistas[pReto][pRound];
+  if (ok) {
+    pDone = true; const pts = worth(); pScore += pts;
+    b.classList.add('ok'); Snd.ok();
+    $$('#pnames .name').forEach(x => x.disabled = true);
+    $('#pmore').disabled = true;
+    const p = stagePos(b); floatPts('+' + pts, p.x, p.y);
+    const card = $('#pcard'); card.className = ''; void card.offsetWidth; card.className = 'swap reveal';
+    card.innerHTML = `<h2 style="font-size:30px;margin-bottom:18px">¡Descubriste quién es!</h2><div class="who">${d.quien}</div><div class="role">${d.rol}</div>`;
+    $('#pdots').innerHTML = d.p.map(() => '<i class="on"></i>').join('');
+    const last = pRound >= CONFIG.pistas[pReto].length - 1;
+    $('#pnext').firstChild.textContent = last ? 'Terminar' : 'Siguiente rector';
+    $('#pnext').classList.remove('hidden');
+  } else {
+    b.classList.add('bad'); b.disabled = true; Snd.bad(); pErr++;
+    // un error revela automáticamente la siguiente pista, si queda
+    if (pShown < d.p.length) { pShown++; later(renderPista, 500); } else updWorth();
+  }
+}
+$('#pnext').addEventListener('click', () => {
+  if (!pDone) return; Snd.click();
+  pRound++;
+  if (pRound < CONFIG.pistas[pReto].length) fadeSwap($('#ppanel'), renderRound);
+  else {
+    const n = CONFIG.pistas[pReto].length;
+    goDone(pReto, pScore, n > 1 ? `Descubriste a los ${n} rectores` : 'Descubriste al rector');
+  }
+});
 
-/* ---------- 5.7 Completado ---------- */
-function goDone(n) {
-  state.done.add(n);
-  const s = $('#s-done'), t = $('#dtitle');
-  s.classList.toggle('final', n === 4);
+/* ---------- RETO COMPLETADO ---------- */
+function goDone(n, pts, detalle) {
+  state.done[n] = pts;
+  const t = $('#dtitle');
   t.innerHTML = `<span class="l1">Reto ${n}</span><span class="l2">Completado</span>`;
-  $('#dscore').textContent = n === 1 ? `Aciertos: ${score} de ${CONFIG.quiz.length}` : '';
-  $('#dmsg').innerHTML = CONFIG.final.map(p => `<p>${p}</p>`).join('');
-  t.classList.remove('show'); void t.offsetWidth;
+  $('#dpts').innerHTML = `+${pts} puntos<small>${detalle.toUpperCase()}</small>`;
+  const left = 4 - Object.keys(state.done).length;
+  $('#dmsg').innerHTML = `<p>${CONFIG.completado[n]}</p><p style="margin-top:14px;color:var(--beige)"><b>${left ? `Te ${left === 1 ? 'falta 1 reto' : `faltan ${left} retos`}. Puntaje total: ${total()}` : `¡Completaste los 4 retos! Puntaje total: ${total()}`}</b></p>`;
+  $('#dnext').firstChild.textContent = left ? 'Continuar' : 'Ver resultado';
+  ['#dtitle', '#dpts', '#dmsg'].forEach(s => $(s).classList.remove('show'));
   showScreen('done');
-  fitTitle(t, n === 4 ? 66 : 72, 530);
-  later(() => { t.classList.add('show'); Snd.win(); }, 200);
+  fitTitle(t, 72, 530);
+  later(() => { ['#dtitle', '#dpts', '#dmsg'].forEach(s => $(s).classList.add('show')); Snd.win(); Confetti.fire(120); }, 250);
 }
-$('#dhome').addEventListener('click', () => { Snd.click(); showScreen('inicio'); });
+$('#dnext').addEventListener('click', () => {
+  Snd.click();
+  if (Object.keys(state.done).length === 4) goFinal(); else goHub();
+});
+
+/* ---------- FINAL ---------- */
+const MAX = (() => {
+  const q = CONFIG.quiz.length * (CONFIG.puntos.acierto + CONFIG.segundos * CONFIG.puntos.bonusPorSegundo) * .8;
+  const m = CONFIG.memoria, M = CONFIG.img.memoria.length, mem = M * m.puntosPareja + m.segundosBonus * m.bonusPorSegundo * .4;
+  const p = (CONFIG.pistas[3].length + CONFIG.pistas[4].length) * CONFIG.pistasPuntos[0];
+  return q + mem + p;
+})();
+function goFinal() {
+  const f = CONFIG.final, tot = total(), ratio = tot / MAX;
+  const rk = f.rangos.find(r => ratio >= r.min);
+  $('#ftitle').textContent = f.titulo;
+  $('#fmsg').innerHTML = f.texto.map(p => `<p>${p}</p>`).join('');
+  $('#fnum').dataset.v = 0; $('#fnum').textContent = '0';
+  $('#fstars').innerHTML = [1, 2, 3].map(k => `<span class="${k <= rk.estrellas ? 'on' : ''}">★</span>`).join('');
+  $('#frank').textContent = rk.texto;
+  $('#ftitle').classList.remove('show');
+  showScreen('final');
+  fitTitle($('#ftitle'), 58, 530);
+  later(() => { $('#ftitle').classList.add('show'); countTo($('#fnum'), tot, 1600); Snd.fanfare(); Confetti.fire(220); }, 300);
+  later(() => Confetti.fire(160), 1400);
+}
+$('#btn-replay').addEventListener('click', () => { Snd.click(); state.done = {}; showScreen('inicio'); });
 
 /* =====================================================================
    Arranque
    ===================================================================== */
-buildInicio(); buildBienvenida();
+buildInicio(); buildHub();
 $$('img[data-src]').forEach(el => setImg(el, CONFIG.img[el.dataset.src]));
 preload([CONFIG.img.inicio, CONFIG.img.logo, ...CONFIG.img.memoria]).then(() => {
   $('#loader').classList.add('hide');
